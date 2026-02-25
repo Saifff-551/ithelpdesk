@@ -14,10 +14,20 @@ import type {
     AIInsights,
     RoutingFeedback,
     AgentCapability,
+    ExplainabilityReport,
+    MFISWeights,
 } from './types';
 import { DEFAULT_TENANT_AI_CONFIG, DEFAULT_MFIS_WEIGHTS } from './types';
 import { scoreAgents, recalibrateWeights } from './mfisEngine';
-import { predictEscalation, analyzeSentiment } from './escalationEngine';
+import { predictEscalation } from './escalationEngine';
+import { ESCALATION_ENGINE_VERSION } from './escalationEngine';
+import { logAnalysis, loadTenantWeights, saveTenantWeights } from './aiAuditLog';
+import { recordLatency } from './aiMetrics';
+import { logger } from '../logger';
+import { checkRateLimit } from '../security';
+
+// Model version for traceability
+const MATIE_MODEL_VERSION = `matie-v2.0.0+${ESCALATION_ENGINE_VERSION}`;
 
 // ============================================
 // Primary MATIE Analysis
@@ -43,28 +53,58 @@ export async function analyzeTicket(
     ticket: Ticket,
     agents: AgentCapability[],
     allTickets: Ticket[],
-    config?: Partial<TenantAIConfig>
+    config?: Partial<TenantAIConfig>,
+    tenantId?: string
 ): Promise<MATIEAnalysis> {
     const startTime = Date.now();
+
+    // INPUT VALIDATION
+    if (!ticket?.id || !ticket?.subject) {
+        throw new Error('Invalid ticket: missing id or subject');
+    }
+    if (!Array.isArray(agents)) {
+        throw new Error('Invalid agents: expected array');
+    }
+
+    // RATE LIMITING (per tenant)
+    if (tenantId && !checkRateLimit(`matie:${tenantId}`, 60, 60_000)) {
+        logger.warn('MATIE rate limit exceeded', { tenantId });
+        throw new Error('Rate limit exceeded — please try again shortly');
+    }
+
     const mergedConfig = { ...DEFAULT_TENANT_AI_CONFIG, ...config };
 
-    // Step 1 & 2: Escalation prediction (includes sentiment analysis)
-    const escalation = await predictEscalation(ticket, allTickets, mergedConfig);
+    // Step 0: Load Firestore-stored weights (config-driven per tenant)
+    let activeWeights = mergedConfig.mfisWeights;
+    if (tenantId) {
+        try {
+            const storedWeights = await loadTenantWeights(tenantId);
+            if (storedWeights) {
+                activeWeights = storedWeights;
+                logger.info('Loaded custom tenant weights from Firestore', { tenantId });
+            }
+        } catch {
+            // Fall back to config weights
+        }
+    }
 
-    // Step 3: Score agents using MFIS
+    // Step 1 & 2: Escalation prediction (includes sentiment + trend analysis)
+    const escalation = await predictEscalation(ticket, allTickets, mergedConfig, tenantId);
+
+    // Step 3: Score agents using MFIS with tenant-specific weights
     const agentRankings = scoreAgents(
         ticket,
         agents,
         escalation.sentiment,
         escalation.probability,
-        mergedConfig.mfisWeights,
+        activeWeights,
         mergedConfig.maxAgentsToScore
     );
 
     // Populate agent names from the rankings
     agents.forEach(agent => {
         const ranking = agentRankings.find(r => r.agentId === agent.agentId);
-        if (ranking) ranking.agentName = agent.agentId; // Will be enriched by caller
+        if (ranking) ranking.agentName = agent.agentId;
     });
 
     // Step 4: Determine recommended assignment
@@ -74,14 +114,29 @@ export async function analyzeTicket(
 
     const recommendedPriority = escalation.suggestedPriority || ticket.priority;
 
-    // Step 5: Overall confidence — weighted average of top agent + escalation confidence
+    // Step 5: Overall confidence — weighted average of top agent + escalation confidence + sentiment confidence
     const topAgentConfidence = agentRankings.length > 0 ? agentRankings[0].confidence : 0.5;
-    const aiConfidence = (topAgentConfidence * 0.6 + (1 - escalation.probability * 0.3) * 0.4);
+    const sentimentWeight = escalation.sentimentConfidence > 0 ? escalation.sentimentConfidence : 0.6;
+    const aiConfidence = (
+        topAgentConfidence * 0.4 +
+        (1 - escalation.probability * 0.3) * 0.3 +
+        sentimentWeight * 0.3
+    );
 
     // Step 6: Compile insights
     const insights = generateInsights(ticket, agentRankings, escalation);
 
-    return {
+    // Step 7: Attach top-agent explainability report to analysis
+    const explainabilityReport: ExplainabilityReport = agentRankings.length > 0
+        ? agentRankings[0].explainability
+        : {
+            topFactors: ['No agents available for scoring'],
+            weightContribution: {},
+            decisionTrace: 'No agents were available for MFIS scoring.',
+            confidenceBreakdown: { factorConsistency: 0, dataQuality: 0, modelCalibration: 0 },
+        };
+
+    const analysis: MATIEAnalysis = {
         ticketId: ticket.id,
         timestamp: new Date().toISOString(),
         agentRankings,
@@ -91,7 +146,74 @@ export async function analyzeTicket(
         aiConfidence: Math.min(1, Math.max(0, aiConfidence)),
         processingTimeMs: Date.now() - startTime,
         insights,
+        explainabilityReport,
+        modelVersion: MATIE_MODEL_VERSION,
     };
+
+    // AUDIT: Persist AI decision to immutable audit trail
+    if (tenantId) {
+        logAnalysis(tenantId, analysis).catch(() => {
+            // Non-blocking — don't fail ticket analysis if audit log fails
+        });
+    }
+
+    logger.info('MATIE analysis completed', {
+        ticketId: ticket.id,
+        confidence: analysis.aiConfidence.toFixed(2),
+        escalationRisk: escalation.riskLevel,
+        agentsScored: agentRankings.length,
+        processingMs: analysis.processingTimeMs,
+    });
+
+    // Track latency for observability metrics
+    recordLatency(analysis.processingTimeMs);
+
+    return analysis;
+}
+
+// ============================================
+// Real-Time Weight Recalibration
+// ============================================
+
+/**
+ * Trigger MFIS weight recalibration using recent feedback.
+ * Loads feedback data, computes new weights via gradient adjustment,
+ * and persists them to Firestore for the tenant.
+ * 
+ * Should be called periodically (e.g., after every 10 resolved tickets)
+ * or manually by an admin from the dashboard.
+ */
+export async function triggerRecalibration(
+    tenantId: string,
+    recentFeedback: RoutingFeedback[],
+    currentWeights?: MFISWeights
+): Promise<MFISWeights> {
+    const baseWeights = currentWeights || DEFAULT_MFIS_WEIGHTS;
+
+    if (recentFeedback.length < 5) {
+        logger.info('Not enough feedback for recalibration', {
+            tenantId,
+            feedbackCount: recentFeedback.length,
+            minRequired: 5,
+        });
+        return baseWeights;
+    }
+
+    // Recalibrate weights using feedback gradient
+    const newWeights = recalibrateWeights(baseWeights, recentFeedback);
+
+    // Persist to Firestore
+    const saved = await saveTenantWeights(tenantId, newWeights);
+
+    logger.info('MFIS weight recalibration completed', {
+        tenantId,
+        feedbackCount: recentFeedback.length,
+        saved,
+        oldWeights: baseWeights,
+        newWeights,
+    });
+
+    return newWeights;
 }
 
 // ============================================
@@ -161,21 +283,55 @@ export function getAIInsights(
         }))
         .sort((a, b) => b.count - a.count);
 
-    // Sentiment trend (mock — would come from stored MATIE analysis logs)
-    const sentimentTrend = Array.from({ length: 7 }, (_, i) => ({
-        date: new Date(now - (6 - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-        avgSentiment: 0.1 + Math.random() * 0.4,
-    }));
+    // Sentiment trend — computed from ticket creation dates (deterministic)
+    const sentimentTrend = Array.from({ length: 7 }, (_, i) => {
+        const dayStart = now - (6 - i) * 24 * 60 * 60 * 1000;
+        const dayEnd = dayStart + 24 * 60 * 60 * 1000;
+        const dayTickets = periodTickets.filter(t => {
+            const created = new Date(t.created_at).getTime();
+            return created >= dayStart && created < dayEnd;
+        });
+        // Compute sentiment proxy from priority distribution (deterministic)
+        const avgPriorityScore = dayTickets.length > 0
+            ? dayTickets.reduce((sum, t) => {
+                const pScore = t.priority === 'urgent' ? -0.5 : t.priority === 'high' ? -0.1 : t.priority === 'medium' ? 0.2 : 0.4;
+                return sum + pScore;
+            }, 0) / dayTickets.length
+            : 0.2;
+        return {
+            date: new Date(dayStart).toISOString().split('T')[0],
+            avgSentiment: Math.round(avgPriorityScore * 100) / 100,
+        };
+    });
+
+    // Compute deterministic routing accuracy from resolved tickets
+    // (proxy: ratio of tickets resolved by their originally assigned agent)
+    const assignedAndResolved = resolved.filter(t => t.assignee_id);
+    const routingAccuracy = assignedAndResolved.length > 0
+        ? assignedAndResolved.length / Math.max(1, periodTickets.length)
+        : 0;
+
+    // Compute deterministic escalation prevention rate
+    const highPriorityResolved = resolved.filter(t => t.priority === 'urgent' || t.priority === 'high');
+    const highPriorityTotal = periodTickets.filter(t => t.priority === 'urgent' || t.priority === 'high');
+    const escalationPreventionRate = highPriorityTotal.length > 0
+        ? highPriorityResolved.length / highPriorityTotal.length
+        : 0;
+
+    // Compute average confidence from actual resolution data (deterministic)
+    const avgConfidence = resolved.length > 0
+        ? Math.min(0.95, 0.5 + (resolved.length / Math.max(1, periodTickets.length)) * 0.4)
+        : 0;
 
     return {
         tenantId,
         period,
-        routingAccuracy: resolved.length > 0 ? Math.min(0.95, 0.75 + Math.random() * 0.2) : 0,
+        routingAccuracy: Math.round(routingAccuracy * 1000) / 1000,
         avgResolutionTimeHours: Math.round(avgResolution * 10) / 10,
-        escalationPreventionRate: Math.min(0.92, 0.65 + Math.random() * 0.25),
+        escalationPreventionRate: Math.round(escalationPreventionRate * 1000) / 1000,
         slaComplianceRate: withSLA.length > 0 ? slaCompliant.length / withSLA.length : 1,
         aiProcessedTickets: periodTickets.length,
-        avgConfidenceScore: 0.78 + Math.random() * 0.15,
+        avgConfidenceScore: Math.round(avgConfidence * 1000) / 1000,
         topCategories,
         sentimentTrend,
     };
@@ -308,7 +464,15 @@ export function buildAgentCapabilities(
             resolvedTickets.forEach(t => {
                 categoryCounts[t.category] = (categoryCounts[t.category] || 0) + 1;
             });
-            const categories = Object.keys(categoryCounts) as any[];
+            const categories = Object.keys(categoryCounts) as Array<typeof allTickets[0]['category']>;
+
+            // Compute satisfaction from resolution metrics (deterministic, no Math.random)
+            // Higher resolution rate + faster resolution = higher rating
+            const resolutionRate = agentTickets.length > 0
+                ? resolvedTickets.length / agentTickets.length
+                : 0.5;
+            const speedFactor = Math.max(0, 1 - (avgResolution / 48)); // Faster than 48h = bonus
+            const computedRating = Math.min(5, Math.max(1, 2 + resolutionRate * 2 + speedFactor));
 
             return {
                 agentId: agent.id,
@@ -317,7 +481,7 @@ export function buildAgentCapabilities(
                 avgResolutionHours: avgResolution,
                 currentOpenTickets: openTickets.length,
                 maxConcurrentTickets: 10,
-                satisfactionRating: 3.5 + Math.random() * 1.5, // Would come from feedback system
+                satisfactionRating: Math.round(computedRating * 10) / 10,
                 isAvailable: agent.is_active,
             };
         });

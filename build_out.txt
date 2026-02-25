@@ -1,0 +1,105 @@
+﻿
+> powergrid-centralized-it-helpdesk@0.0.0 build
+> vite build
+
+[36mvite v6.3.6 [32mbuilding for production...[36m[39m
+transforming...
+[32mΓ£ô[39m 1769 modules transformed.
+node.exe : [31mΓ£ù[39m 
+Build failed in 5.21s
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
+    + CategoryInfo          
+    : NotSpecified: ([31m  
+  Γ£ù[39m Build failed i   
+ n 5.21s:String) [], Rem    
+oteException
+    + FullyQualifiedErrorId 
+    : NativeCommandError
+ 
+[31merror during build:
+[31mindex.tsx (4:7): 
+"default" is not exported 
+by "App.tsx", imported by 
+"index.tsx".[31m
+file: [36mC:/Users/junaidpa
+sha/Downloads/drive-download
+-20260102T125658Z-3-001/inde
+x.tsx:4:7[31m
+[33m
+2: import React from 
+'react';
+3: import ReactDOM from 
+'react-dom/client';
+4: import App from './App';
+          ^
+5: import './index.css';
+[31m
+    at getRollupError (file:
+///C:/Users/junaidpasha/Down
+loads/drive-download-2026010
+2T125658Z-3-001/node_modules
+/rollup/dist/es/shared/parse
+Ast.js:401:41)
+    at error (file:///C:/Use
+rs/junaidpasha/Downloads/dri
+ve-download-20260102T125658Z
+-3-001/node_modules/rollup/d
+ist/es/shared/parseAst.js:39
+7:42)
+    at Module.error (file://
+/C:/Users/junaidpasha/Downlo
+ads/drive-download-20260102T
+125658Z-3-001/node_modules/r
+ollup/dist/es/shared/node-en
+try.js:16960:16)
+    at Module.traceVariable 
+(file:///C:/Users/junaidpash
+a/Downloads/drive-download-2
+0260102T125658Z-3-001/node_m
+odules/rollup/dist/es/shared
+/node-entry.js:17412:29)
+    at 
+ModuleScope.findVariable (fi
+le:///C:/Users/junaidpasha/D
+ownloads/drive-download-2026
+0102T125658Z-3-001/node_modu
+les/rollup/dist/es/shared/no
+de-entry.js:15082:39)
+    at Identifier.bind (file
+:///C:/Users/junaidpasha/Dow
+nloads/drive-download-202601
+02T125658Z-3-001/node_module
+s/rollup/dist/es/shared/node
+-entry.js:5413:40)
+    at CallExpression.bind (
+file:///C:/Users/junaidpasha
+/Downloads/drive-download-20
+260102T125658Z-3-001/node_mo
+dules/rollup/dist/es/shared/
+node-entry.js:2800:28)
+    at CallExpression.bind (
+file:///C:/Users/junaidpasha
+/Downloads/drive-download-20
+260102T125658Z-3-001/node_mo
+dules/rollup/dist/es/shared/
+node-entry.js:12108:15)
+    at Property.bind (file:/
+//C:/Users/junaidpasha/Downl
+oads/drive-download-20260102
+T125658Z-3-001/node_modules/
+rollup/dist/es/shared/node-e
+ntry.js:2804:23)
+    at 
+ObjectExpression.bind (file:
+///C:/Users/junaidpasha/Down
+loads/drive-download-2026010
+2T125658Z-3-001/node_modules
+/rollup/dist/es/shared/node-
+entry.js:2800:28)[39m

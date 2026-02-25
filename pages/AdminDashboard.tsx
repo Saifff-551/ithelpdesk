@@ -3,7 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../services/auth';
 import { getTickets, getTicketStats } from '../services/tickets';
 import { getUsersByTenant } from '../services/firestore';
+import { getAIInsights } from '../services/matie/matieService';
 import { Ticket, Profile, TicketStatus, TicketPriority } from '../types';
+import type { AIInsights } from '../services/matie/types';
+import { checkUserPermission } from '../services/rbac';
 import {
     Ticket as TicketIcon,
     Users,
@@ -102,6 +105,7 @@ export const AdminDashboard: React.FC = () => {
         closed: number;
         by_priority: Record<string, number>;
     } | null>(null);
+    const [aiInsights, setAiInsights] = useState<AIInsights | null>(null);
 
     const primaryColor = tenant?.primary_color || '#9213ec';
 
@@ -142,6 +146,16 @@ export const AdminDashboard: React.FC = () => {
                 setTickets(ticketsData.slice(0, 10));
                 setUsers(usersData);
                 setStats(statsData);
+
+                // Compute MATIE AI insights from real ticket data
+                if (tenant?.id && ticketsData.length > 0) {
+                    try {
+                        const insights = getAIInsights(tenant.id, ticketsData, 'week');
+                        setAiInsights(insights);
+                    } catch (err) {
+                        console.error('Error computing AI insights:', err);
+                    }
+                }
             } catch (error) {
                 console.error('Error fetching dashboard data:', error);
             } finally {
@@ -250,52 +264,52 @@ export const AdminDashboard: React.FC = () => {
                 />
             </div>
 
-            {/* MATIE AI Intelligence Metrics */}
-            <div className="bg-gradient-to-r from-purple-900/10 to-indigo-900/10 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-2xl border border-purple-200/30 dark:border-purple-800/30 p-6">
-                <div className="flex items-center gap-3 mb-5">
-                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center text-white">
-                        <Zap className="w-5 h-5" />
+            {/* MATIE AI Intelligence Metrics — Admin Only */}
+            {checkUserPermission(profile?.role_id, 'view_ai_insights') ? (
+                <div className="bg-gradient-to-r from-purple-900/10 to-indigo-900/10 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-2xl border border-purple-200/30 dark:border-purple-800/30 p-6">
+                    <div className="flex items-center gap-3 mb-5">
+                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center text-white">
+                            <Zap className="w-5 h-5" />
+                        </div>
+                        <div>
+                            <h2 className="font-bold text-gray-900 dark:text-white text-sm">MATIE Intelligence Engine</h2>
+                            <p className="text-xs text-gray-500">Adaptive Ticket Intelligence — Real-time Metrics</p>
+                        </div>
+                        <span className="ml-auto px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-bold rounded-full flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                            Active
+                        </span>
                     </div>
-                    <div>
-                        <h2 className="font-bold text-gray-900 dark:text-white text-sm">MATIE Intelligence Engine</h2>
-                        <p className="text-xs text-gray-500">Adaptive Ticket Intelligence — Real-time Metrics</p>
-                    </div>
-                    <span className="ml-auto px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-bold rounded-full flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                        Active
-                    </span>
-                </div>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border border-purple-100 dark:border-purple-800/20">
-                        <p className="text-xs text-gray-500 mb-1">AI Routing Accuracy</p>
-                        <p className="text-2xl font-black" style={{ color: primaryColor }}>94.2%</p>
-                        <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
-                            <TrendingUp className="w-3 h-3" />+3.1% this week
-                        </p>
-                    </div>
-                    <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border border-purple-100 dark:border-purple-800/20">
-                        <p className="text-xs text-gray-500 mb-1">Avg Resolution Time</p>
-                        <p className="text-2xl font-black text-blue-600">4.2h</p>
-                        <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
-                            <TrendingUp className="w-3 h-3" />-18% faster
-                        </p>
-                    </div>
-                    <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border border-purple-100 dark:border-purple-800/20">
-                        <p className="text-xs text-gray-500 mb-1">Escalation Prevention</p>
-                        <p className="text-2xl font-black text-emerald-600">87.5%</p>
-                        <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
-                            <TrendingUp className="w-3 h-3" />+5.7% this week
-                        </p>
-                    </div>
-                    <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border border-purple-100 dark:border-purple-800/20">
-                        <p className="text-xs text-gray-500 mb-1">SLA Compliance</p>
-                        <p className="text-2xl font-black text-teal-600">96.1%</p>
-                        <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
-                            <TrendingUp className="w-3 h-3" />+2.3% this week
-                        </p>
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border border-purple-100 dark:border-purple-800/20">
+                            <p className="text-xs text-gray-500 mb-1">AI Routing Accuracy</p>
+                            <p className="text-2xl font-black" style={{ color: primaryColor }}>{aiInsights ? `${(aiInsights.routingAccuracy * 100).toFixed(1)}%` : '—'}</p>
+                            <p className="text-xs text-gray-400 mt-1">{aiInsights ? `${aiInsights.aiProcessedTickets} tickets analyzed` : 'Computing...'}</p>
+                        </div>
+                        <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border border-purple-100 dark:border-purple-800/20">
+                            <p className="text-xs text-gray-500 mb-1">Avg Resolution Time</p>
+                            <p className="text-2xl font-black text-blue-600">{aiInsights ? `${aiInsights.avgResolutionTimeHours}h` : '—'}</p>
+                            <p className="text-xs text-gray-400 mt-1">This week</p>
+                        </div>
+                        <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border border-purple-100 dark:border-purple-800/20">
+                            <p className="text-xs text-gray-500 mb-1">Escalation Prevention</p>
+                            <p className="text-2xl font-black text-emerald-600">{aiInsights ? `${(aiInsights.escalationPreventionRate * 100).toFixed(1)}%` : '—'}</p>
+                            <p className="text-xs text-gray-400 mt-1">High/urgent resolved</p>
+                        </div>
+                        <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border border-purple-100 dark:border-purple-800/20">
+                            <p className="text-xs text-gray-500 mb-1">SLA Compliance</p>
+                            <p className="text-2xl font-black text-teal-600">{aiInsights ? `${(aiInsights.slaComplianceRate * 100).toFixed(1)}%` : '—'}</p>
+                            <p className="text-xs text-gray-400 mt-1">On-time delivery</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            ) : (
+                <div className="bg-gray-50 dark:bg-gray-800/30 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 text-center">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                        🔒 AI Intelligence Metrics are restricted to administrators.
+                    </p>
+                </div>
+            )}
 
             {/* Urgent Alert */}
             {urgentTickets > 0 && (

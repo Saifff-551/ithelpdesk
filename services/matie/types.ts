@@ -62,6 +62,25 @@ export interface AgentScore {
     rank: number;                // 1 = best match
     confidence: number;          // Model confidence (0-1)
     reasoning: string;           // Human-readable justification
+    explainability: ExplainabilityReport; // Patent-grade decision traceability
+}
+
+/**
+ * Explainability report for AI decision traceability.
+ * Every routing decision is decomposed into traceable factor contributions.
+ * 
+ * Patent-relevant: Provides full transparency into AI decision-making,
+ * enabling audit compliance and regulatory review.
+ */
+export interface ExplainabilityReport {
+    topFactors: string[];                        // Ranked human-readable factors
+    weightContribution: Record<string, number>;  // Factor → weighted contribution to score
+    decisionTrace: string;                       // Full narrative of the routing decision
+    confidenceBreakdown: {
+        factorConsistency: number;               // How consistent factors are (0-1)
+        dataQuality: number;                     // Quality of input data (0-1)
+        modelCalibration: number;                // Weight calibration quality (0-1)
+    };
 }
 
 // ============================================
@@ -90,15 +109,46 @@ export interface ResolutionHistory {
  */
 export interface EscalationPrediction {
     ticketId: string;
-    probability: number;          // 0.0 — 1.0 escalation likelihood
+    probability: number;          // 0.0 — 1.0 escalation likelihood (sigmoid-normalized)
     riskLevel: 'low' | 'medium' | 'high' | 'critical';
     triggerFactors: string[];     // Reasons driving the prediction
     recommendedActions: string[]; // Suggested interventions
     sentiment: SentimentAnalysis;
+    sentimentConfidence: number;  // Gemini NLP confidence (0-1), 0 = heuristic fallback
     isRepeatComplaint: boolean;
     predictedResolutionHours: number;
     shouldAutoEscalate: boolean;  // True if probability > threshold
     suggestedPriority?: TicketPriority; // Auto-priority reassignment
+    trendSignals: TrendSignal[];  // Historical trend patterns detected
+}
+
+/**
+ * Trend signal from historical pattern analysis.
+ * Patent-relevant: Documents the multi-signal analysis used for prediction.
+ */
+export interface TrendSignal {
+    signal: string;              // Signal name (e.g., 'volume_spike', 'repeat_creator')
+    direction: 'rising' | 'falling' | 'stable';
+    strength: number;            // 0-1 signal strength
+    description: string;         // Human-readable explanation
+}
+
+/**
+ * Escalation prediction audit entry — stored to Firestore per prediction.
+ */
+export interface EscalationAuditEntry {
+    ticketId: string;
+    tenantId: string;
+    timestamp: string;
+    probability: number;
+    riskLevel: string;
+    sentimentScore: number;
+    sentimentLabel: string;
+    sentimentConfidence: number;
+    triggerFactors: string[];
+    trendSignals: TrendSignal[];
+    isRepeatComplaint: boolean;
+    modelVersion: string;
 }
 
 // ============================================
@@ -119,6 +169,8 @@ export interface MATIEAnalysis {
     aiConfidence: number;                  // Overall confidence (0-1)
     processingTimeMs: number;
     insights: string[];                    // Human-readable AI insights
+    explainabilityReport: ExplainabilityReport; // Top-agent explainability
+    modelVersion: string;                  // Engine version for traceability
 }
 
 /**

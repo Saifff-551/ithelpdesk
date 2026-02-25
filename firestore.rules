@@ -94,8 +94,10 @@ service cloud.firestore {
                        request.resource.data.tenant_id == getUserProfile().tenant_id && 
                        isAdmin();
       
-      // Anyone can update (to mark as accepted), admins can manage
-      allow update: if true;
+      // Only the invited user can accept (mark as accepted), admins can manage
+      allow update: if isAuthenticated() && 
+                       (resource.data.email == request.auth.token.email || 
+                        (resource.data.tenant_id == getUserProfile().tenant_id && isAdmin()));
       
       // Admins can delete invitations from their tenant
       allow delete: if isAuthenticated() && 
@@ -195,6 +197,118 @@ service cloud.firestore {
       allow delete: if isAuthenticated() && 
                        resource.data.tenant_id == getUserProfile().tenant_id && 
                        isAdmin();
+    }
+    
+    // ============================================
+    // MATIE AI ANALYSES (Audit Trail)
+    // ============================================
+    match /matie_analyses/{analysisId} {
+      // Read: admin-only in the tenant (AI insights are sensitive)
+      allow read: if isAuthenticated() && 
+                     resource.data.tenant_id == getUserProfile().tenant_id &&
+                     isAdmin();
+      
+      // Create: system-generated (support staff can trigger)
+      allow create: if isAuthenticated() && 
+                       request.resource.data.tenant_id == getUserProfile().tenant_id &&
+                       isSupportStaff();
+      
+      // No updates or deletes — immutable audit trail
+      allow update, delete: if false;
+    }
+    
+    // ============================================
+    // MATIE ESCALATION PREDICTIONS (Audit Trail)
+    // ============================================
+    match /matie_escalation_predictions/{predictionId} {
+      // Read: admin-only in the tenant
+      allow read: if isAuthenticated() && 
+                     resource.data.tenant_id == getUserProfile().tenant_id &&
+                     isAdmin();
+      
+      // Create: support staff can trigger predictions
+      allow create: if isAuthenticated() && 
+                       request.resource.data.tenant_id == getUserProfile().tenant_id &&
+                       isSupportStaff();
+      
+      // Immutable — no updates or deletes
+      allow update, delete: if false;
+    }
+    
+    // ============================================
+    // MATIE ROUTING FEEDBACK
+    // ============================================
+    match /matie_feedback/{feedbackId} {
+      // Read: admins only (for weight recalibration)
+      allow read: if isAuthenticated() && 
+                     resource.data.tenant_id == getUserProfile().tenant_id &&
+                     isAdmin();
+      
+      // Create: support staff (when resolving/reassigning tickets)
+      allow create: if isAuthenticated() && 
+                       request.resource.data.tenant_id == getUserProfile().tenant_id &&
+                       isSupportStaff();
+      
+      // No updates or deletes — immutable feedback log
+      allow update, delete: if false;
+    }
+    
+    // ============================================
+    // TENANT AI CONFIG
+    // ============================================
+    match /matie_config/{tenantId} {
+      // Read: support staff in the tenant
+      allow read: if isAuthenticated() && 
+                     tenantId == getUserProfile().tenant_id &&
+                     isSupportStaff();
+      
+      // Write: admins only
+      allow write: if isAuthenticated() && 
+                      tenantId == getUserProfile().tenant_id &&
+                      isAdmin();
+    }
+    
+    // ============================================
+    // SECURITY AUDIT LOG
+    // ============================================
+    match /security_audit_log/{logId} {
+      // Read: admin-only (security review)
+      allow read: if isAuthenticated() && 
+                     resource.data.tenant_id == getUserProfile().tenant_id &&
+                     isAdmin();
+      
+      // Create: any authenticated user (system-generated on access checks)
+      allow create: if isAuthenticated() && 
+                       request.resource.data.tenant_id == getUserProfile().tenant_id;
+      
+      // Immutable — no updates or deletes
+      allow update, delete: if false;
+    }
+    
+    // ============================================
+    // AI METRICS (Observability)
+    // ============================================
+    match /ai_metrics/{tenantId} {
+      // Read: admin-only (dashboards)
+      allow read: if isAuthenticated() && 
+                     tenantId == getUserProfile().tenant_id &&
+                     isAdmin();
+      
+      // Write: support staff can trigger metric computation
+      allow write: if isAuthenticated() && 
+                      tenantId == getUserProfile().tenant_id &&
+                      isSupportStaff();
+      
+      // History subcollection — immutable snapshots
+      match /history/{snapshotId} {
+        allow read: if isAuthenticated() && 
+                       tenantId == getUserProfile().tenant_id &&
+                       isAdmin();
+        allow create: if isAuthenticated() && 
+                         tenantId == getUserProfile().tenant_id &&
+                         isSupportStaff();
+        allow update, delete: if false;
+      }
     }
     
     // ============================================

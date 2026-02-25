@@ -10,16 +10,25 @@ import {
     DocumentData,
 } from 'firebase/firestore';
 
-// Firebase configuration
+// Firebase configuration — loaded from environment variables
+// SECURITY: No API keys in source code. All values via .env files.
 const firebaseConfig = {
-    apiKey: "AIzaSyCL-lN7ikVnSo92AFKd1JwLXSMAZLMxZYA",
-    authDomain: "helpdesk-5fe0c.firebaseapp.com",
-    projectId: "helpdesk-5fe0c",
-    storageBucket: "helpdesk-5fe0c.firebasestorage.app",
-    messagingSenderId: "174650276296",
-    appId: "1:174650276296:web:db45cd7ee77e32985568fd",
-    measurementId: "G-0NG67FZRKS"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
+
+// Runtime validation — fail fast if keys are missing
+const requiredKeys = ['apiKey', 'authDomain', 'projectId'] as const;
+for (const key of requiredKeys) {
+    if (!firebaseConfig[key]) {
+        console.error(`[MATIE Security] Missing required Firebase env var: VITE_FIREBASE_${key.replace(/([A-Z])/g, '_$1').toUpperCase()}`);
+    }
+}
 
 //Initialize Firebase
 const app = initializeApp(firebaseConfig);

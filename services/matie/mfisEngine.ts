@@ -20,6 +20,7 @@ import type {
     TenantAIConfig,
     RoutingFeedback,
     SentimentAnalysis,
+    ExplainabilityReport,
 } from './types';
 import { DEFAULT_MFIS_WEIGHTS } from './types';
 
@@ -175,28 +176,55 @@ export function scoreAgents(
     weights: MFISWeights = DEFAULT_MFIS_WEIGHTS,
     maxAgents: number = 20
 ): AgentScore[] {
+    // Validate weights sum ≈ 1.0
+    const weightSum = Object.values(weights).reduce((a, b) => a + b, 0);
+    if (Math.abs(weightSum - 1.0) > 0.05) {
+        weights = normalizeWeights(weights);
+    }
+
     const availableAgents = agents
         .filter(a => a.isAvailable)
         .slice(0, maxAgents);
+
+    if (availableAgents.length === 0) {
+        return [];
+    }
 
     const scored: AgentScore[] = availableAgents.map(agent => {
         const factors = computeFactors(ticket, agent, sentiment, escalationProb);
         const finalScore = computeFinalScore(factors, weights);
 
-        // Compute confidence based on factor consistency
+        // Compute confidence based on factor consistency + data quality
         const factorValues = Object.values(factors);
         const mean = factorValues.reduce((a, b) => a + b, 0) / factorValues.length;
         const variance = factorValues.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / factorValues.length;
-        const confidence = Math.max(0.3, 1 - Math.sqrt(variance));
+        const factorConsistency = Math.max(0.3, 1 - Math.sqrt(variance));
+
+        // Data quality: higher if agent has resolved tickets in this category
+        const dataQuality = agent.categories.includes(ticket.category) ? 0.9 : 0.5;
+
+        // Model calibration: weight entropy (closer to uniform = less calibrated)
+        const wValues = Object.values(weights);
+        const wEntropy = -wValues.reduce((s, w) => s + (w > 0 ? w * Math.log(w) : 0), 0);
+        const maxEntropy = Math.log(wValues.length);
+        const modelCalibration = Math.max(0.3, 1 - (wEntropy / maxEntropy));
+
+        const confidence = (factorConsistency * 0.5 + dataQuality * 0.3 + modelCalibration * 0.2);
+
+        // Generate explainability report
+        const explainability = generateExplainabilityReport(
+            factors, weights, agent, ticket, factorConsistency, dataQuality, modelCalibration
+        );
 
         return {
             agentId: agent.agentId,
-            agentName: '',  // Populated by caller
+            agentName: '',   // Populated by caller
             finalScore,
             factors,
-            rank: 0,        // Set after sorting
-            confidence,
+            rank: 0,         // Set after sorting
+            confidence: Math.min(1, Math.max(0, confidence)),
             reasoning: generateReasoning(factors, weights, agent),
+            explainability,
         };
     });
 
@@ -310,5 +338,66 @@ export function normalizeWeights(weights: MFISWeights): MFISWeights {
         workloadIndex: clamped.workloadIndex / sum,
         slaUrgencyWeight: clamped.slaUrgencyWeight / sum,
         escalationProbability: clamped.escalationProbability / sum,
+    };
+}
+
+// ============================================
+// Explainability Report Generation
+// ============================================
+
+/**
+ * Generate a patent-grade explainability report for an agent routing decision.
+ * Decomposes the final score into traceable weight contributions per factor.
+ */
+function generateExplainabilityReport(
+    factors: MFISFactors,
+    weights: MFISWeights,
+    agent: AgentCapability,
+    ticket: Ticket,
+    factorConsistency: number,
+    dataQuality: number,
+    modelCalibration: number
+): ExplainabilityReport {
+    // Compute weighted contribution of each factor
+    const weightContribution: Record<string, number> = {
+        expertiseMatch: Math.round(weights.expertiseMatch * factors.expertiseMatch * 10000) / 10000,
+        sentimentScore: Math.round(weights.sentimentScore * factors.sentimentScore * 10000) / 10000,
+        workloadIndex: Math.round(weights.workloadIndex * factors.workloadIndex * 10000) / 10000,
+        slaUrgencyWeight: Math.round(weights.slaUrgencyWeight * factors.slaUrgencyWeight * 10000) / 10000,
+        escalationProbability: Math.round(weights.escalationProbability * factors.escalationProbability * 10000) / 10000,
+    };
+
+    // Rank factors by contribution
+    const rankedFactors = Object.entries(weightContribution)
+        .sort(([, a], [, b]) => b - a)
+        .map(([factor, contribution]) => {
+            const labels: Record<string, string> = {
+                expertiseMatch: 'Category expertise alignment',
+                sentimentScore: 'Customer sentiment handling',
+                workloadIndex: 'Agent workload availability',
+                slaUrgencyWeight: 'SLA deadline urgency',
+                escalationProbability: 'Escalation risk mitigation',
+            };
+            return `${labels[factor] || factor} (${(contribution * 100).toFixed(1)}% contribution)`;
+        });
+
+    // Generate decision trace narrative
+    const topFactor = Object.entries(weightContribution).sort(([, a], [, b]) => b - a)[0];
+    const decisionTrace = [
+        `Agent ${agent.agentId} scored for ticket [${ticket.category}/${ticket.priority}].`,
+        `Primary driver: ${topFactor[0]} contributing ${(topFactor[1] * 100).toFixed(1)}% to final score.`,
+        `Agent handles ${agent.categories.join(', ')} with ${agent.currentOpenTickets}/${agent.maxConcurrentTickets} open tickets.`,
+        `Confidence: consistency=${(factorConsistency * 100).toFixed(0)}%, data=${(dataQuality * 100).toFixed(0)}%, calibration=${(modelCalibration * 100).toFixed(0)}%.`,
+    ].join(' ');
+
+    return {
+        topFactors: rankedFactors,
+        weightContribution,
+        decisionTrace,
+        confidenceBreakdown: {
+            factorConsistency: Math.round(factorConsistency * 1000) / 1000,
+            dataQuality: Math.round(dataQuality * 1000) / 1000,
+            modelCalibration: Math.round(modelCalibration * 1000) / 1000,
+        },
     };
 }
