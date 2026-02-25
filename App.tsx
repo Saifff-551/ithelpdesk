@@ -17,6 +17,7 @@ import { KbPage } from './pages/KbPage';
 import { UsersPage } from './pages/UsersPage';
 import { PlatformAdminPage } from './pages/PlatformAdminPage';
 import { PitchPage } from './pages/PitchPage';
+import { PatentPage } from './pages/PatentPage';
 
 export const App: React.FC = () => {
   return (
@@ -31,6 +32,7 @@ export const App: React.FC = () => {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/accept-invite/:token" element={<AcceptInvitePage />} />
             <Route path="/pitch" element={<PitchPage />} />
+            <Route path="/patent" element={<PatentPage />} />
 
             {/* Dashboard Routes */}
             <Route path="/dashboard" element={
