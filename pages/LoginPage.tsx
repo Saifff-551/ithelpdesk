@@ -46,11 +46,11 @@ export const LoginPage: React.FC = () => {
 
   // Determine branding based on tenant
   const isTenantLogin = tenant && !isPublicAccess;
-  const brandName = isTenantLogin ? tenant.name : 'HelpDesk Pro';
+  const brandName = isTenantLogin ? tenant.name : 'MATIE Control Plane';
   const brandLogo = isTenantLogin && tenant.logo_url;
   const primaryColor = tenant?.primary_color || '#9213ec';
   const heroTitle = isTenantLogin
-    ? `Welcome to ${tenant.name} IT Helpdesk`
+    ? `Welcome to ${tenant.name} Control Plane`
     : 'Welcome back to your enterprise support hub';
 
   return (
@@ -127,7 +127,7 @@ export const LoginPage: React.FC = () => {
 
             <div>
               <h2 className="text-3xl font-bold leading-9 tracking-tight text-slate-900 dark:text-white">
-                {isTenantLogin ? `${tenant.name} IT Helpdesk` : 'Sign in to HelpDesk Pro'}
+                {isTenantLogin ? `${tenant.name} Control Plane` : 'Sign in to MATIE'}
               </h2>
               <p className="mt-2 text-base leading-6 text-slate-500 dark:text-slate-400">
                 {isTenantLogin
@@ -238,7 +238,7 @@ export const LoginPage: React.FC = () => {
                   </div>
                   <div className="relative flex justify-center text-sm font-medium leading-6">
                     <span className="bg-white dark:bg-background-dark px-4 text-slate-500 dark:text-slate-400">
-                      New to HelpDesk Pro?
+                      New to MATIE?
                     </span>
                   </div>
                 </div>
@@ -261,7 +261,7 @@ export const LoginPage: React.FC = () => {
               <div className="mt-8 text-center">
                 <p className="text-sm text-slate-500 dark:text-slate-400">
                   Don't have an account? Contact your IT administrator
-                  <br />to request access to the helpdesk.
+                  <br />to request access to the control plane.
                 </p>
               </div>
             )}
@@ -270,7 +270,7 @@ export const LoginPage: React.FC = () => {
           {/* Footer */}
           <div className="mt-12 border-t border-slate-100 dark:border-white/5 pt-6 text-center lg:text-left">
             <p className="text-xs leading-5 text-slate-400 dark:text-slate-500">
-              © {new Date().getFullYear()} {isTenantLogin ? tenant.name : 'HelpDesk Pro'}. Secure Enterprise Systems.
+              © {new Date().getFullYear()} {isTenantLogin ? tenant.name : 'MATIE Enterprise'}. Secure Infrastructure Systems.
             </p>
           </div>
         </div>

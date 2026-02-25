@@ -31,7 +31,7 @@ const TitleSlide: React.FC = () => (
 
             <h1 className="text-white text-[56px] font-bold leading-tight max-w-5xl mx-auto mb-6">
                 Centralized White-Label<br />
-                Enterprise IT Helpdesk Platform
+                Enterprise AI Infrastructure Platform
             </h1>
 
             <div className="mx-auto mb-8 h-[3px] w-64 bg-gradient-to-r from-transparent via-white/70 to-transparent" />
@@ -117,7 +117,7 @@ const LimitationsSlide: React.FC = () => (
                 <div className="mb-8">
                     <h2 className="text-[26px] font-semibold text-red-700 flex items-center gap-2 mb-2">
                         <span className="material-icons text-[30px]">desktop_windows</span>
-                        Traditional Helpdesk Systems
+                        Traditional Routing Systems
                     </h2>
                     <div className="w-20 h-[3px] bg-red-500" />
                 </div>
@@ -137,7 +137,7 @@ const LimitationsSlide: React.FC = () => (
                 <div className="mb-8">
                     <h2 className="text-[26px] font-semibold text-[#6A1B9A] flex items-center gap-2 mb-2">
                         <span className="material-icons text-[30px]">cloud</span>
-                        Modern SaaS Helpdesk Platforms
+                        Modern SaaS Routing Platforms
                     </h2>
                     <div className="w-20 h-[3px] bg-[#6A1B9A]" />
                 </div>
@@ -305,7 +305,7 @@ const WhiteLabelSlide: React.FC = () => (
                             </div>
                             <div className="flex items-center gap-2">
                                 <span className="material-icons text-[#6A1B9A] text-xl">language</span>
-                                <span className="text-gray-700 text-[18px]">domain-a.helpdesk.com</span>
+                                <span className="text-gray-700 text-[18px]">domain-a.matie.app</span>
                             </div>
                         </div>
                     </div>
@@ -329,7 +329,7 @@ const WhiteLabelSlide: React.FC = () => (
                             </div>
                             <div className="flex items-center gap-2">
                                 <span className="material-icons text-[#2196F3] text-xl">language</span>
-                                <span className="text-gray-700 text-[18px]">domain-b.helpdesk.com</span>
+                                <span className="text-gray-700 text-[18px]">domain-b.matie.app</span>
                             </div>
                         </div>
                     </div>
@@ -385,7 +385,7 @@ const RolesSlide: React.FC = () => (
                 {[
                     { name: 'Platform Admin', icon: 'admin_panel_settings', desc: 'Full system access', color: '#6d28d9' },
                     { name: 'Company Admin', icon: 'business', desc: 'Manage organization', color: '#7c3aed' },
-                    { name: 'IT Manager', icon: 'settings', desc: 'Configure helpdesk', color: '#8b5cf6' },
+                    { name: 'IT Manager', icon: 'settings', desc: 'Configure infrastructure', color: '#8b5cf6' },
                     { name: 'Support Agent', icon: 'support_agent', desc: 'Handle tickets', color: '#a78bfa' },
                     { name: 'Employee', icon: 'person', desc: 'Create tickets', color: '#c4b5fd' },
                 ].map((role, i) => (

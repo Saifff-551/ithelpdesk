@@ -34,7 +34,7 @@ const applyBranding = (tenant: Tenant | null): void => {
         }
 
         // Update document title
-        document.title = `${tenant.name} IT Helpdesk`;
+        document.title = `${tenant.name} Control Plane`;
 
         // Update favicon if custom
         if (tenant.favicon_url) {
@@ -60,7 +60,7 @@ const applyBranding = (tenant: Tenant | null): void => {
         root.style.setProperty('--primary-color', '#9213ec');
         root.style.setProperty('--secondary-color', '#7a10c4');
         root.style.setProperty('--accent-color', '#6366f1');
-        document.title = 'HelpDesk Pro - Enterprise IT Support';
+        document.title = 'MATIE - Enterprise AI Infrastructure';
     }
 };
 

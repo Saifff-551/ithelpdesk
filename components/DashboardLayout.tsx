@@ -87,9 +87,9 @@ export const DashboardLayout: React.FC = () => {
                 </div>
                 <div>
                   <span className="text-lg font-bold text-gray-900 dark:text-white">
-                    {activeTenant?.name || 'HelpDesk'}
+                    {activeTenant?.name || 'MATIE'}
                   </span>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">IT Support</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Control Plane</p>
                 </div>
               </div>
             )}
@@ -176,7 +176,7 @@ export const DashboardLayout: React.FC = () => {
             </div>
           )}
           <span className="font-semibold text-gray-900 dark:text-white">
-            {activeTenant?.name || 'HelpDesk'}
+            {activeTenant?.name || 'MATIE'}
           </span>
         </div>
         <button

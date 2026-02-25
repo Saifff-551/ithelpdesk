@@ -242,7 +242,7 @@ export const RegisterPage: React.FC = () => {
                 Register Your Organization
               </h2>
               <p className="mt-2 text-base leading-6 text-slate-500 dark:text-slate-400">
-                Create your IT helpdesk in minutes. Get your own branded portal.
+                Deploy your AI routing infrastructure in minutes. Get your own branded control plane.
               </p>
             </div>
           </div>
@@ -273,7 +273,7 @@ export const RegisterPage: React.FC = () => {
               {/* Subdomain */}
               <div>
                 <label htmlFor="subdomain" className="block text-sm font-semibold leading-6 text-slate-700 dark:text-slate-300 ml-1">
-                  Your Helpdesk URL
+                  Your Platform URL
                 </label>
                 <div className="mt-2 relative">
                   <div className="flex rounded-xl shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-white/10 focus-within:ring-2 focus-within:ring-primary bg-slate-50/30 dark:bg-white/5">
@@ -320,7 +320,7 @@ export const RegisterPage: React.FC = () => {
                   />
                 </div>
                 <p className="mt-1.5 text-xs text-slate-500 ml-1">
-                  🤖 AI will use this to customize your helpdesk branding automatically
+                  🤖 AI will use this to customize your control plane branding automatically
                 </p>
               </div>
 
@@ -502,7 +502,7 @@ export const RegisterPage: React.FC = () => {
                 to="/login"
                 className="group inline-flex items-center text-sm font-semibold text-primary hover:text-secondary transition-colors"
               >
-                Sign in to your dashboard
+                Sign in to your control plane
                 <ChevronRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
@@ -511,7 +511,7 @@ export const RegisterPage: React.FC = () => {
           {/* Footer */}
           <div className="mt-12 border-t border-slate-100 dark:border-white/5 pt-6 text-center lg:text-left">
             <p className="text-xs leading-5 text-slate-400 dark:text-slate-500">
-              © {new Date().getFullYear()} HelpDesk Pro. Secure Enterprise Systems.
+              © {new Date().getFullYear()} MATIE Enterprise. Secure Infrastructure Systems.
             </p>
           </div>
         </div>

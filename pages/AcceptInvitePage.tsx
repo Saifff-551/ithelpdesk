@@ -247,7 +247,7 @@ export const AcceptInvitePage: React.FC = () => {
                                 Join {tenant?.name}
                             </h1>
                             <p className="text-sm text-gray-500">
-                                You've been invited to the IT Helpdesk
+                                You've been invited to the MATIE Control Plane
                             </p>
                         </div>
                     </div>
