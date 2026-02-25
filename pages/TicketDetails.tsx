@@ -30,18 +30,34 @@ import {
   MessageSquare,
   Eye,
   EyeOff,
+  Zap,
 } from 'lucide-react';
+import { RoutingTransparencyPanel } from '../components/matie/RoutingTransparencyPanel';
 
 // Status Badge Component
 const StatusBadge: React.FC<{ status: TicketStatus; large?: boolean }> = ({ status, large }) => {
   const styles: Record<TicketStatus, string> = {
-    open: 'bg-blue-100 text-blue-800 border-blue-200',
-    in_progress: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-    resolved: 'bg-green-100 text-green-800 border-green-200',
-    closed: 'bg-gray-100 text-gray-800 border-gray-200',
+    created: 'bg-surface-3 text-gray-400 border-border-default',
+    routing_pending: 'bg-status-info/10 text-status-info border-status-info/20',
+    routing_in_progress: 'bg-status-warning/10 text-status-warning border-status-warning/20',
+    assigned: 'bg-primary/10 text-primary border-primary/20',
+    degraded_assigned: 'bg-status-degraded/10 text-status-degraded border-status-degraded/20',
+    unassigned: 'bg-status-critical/10 text-status-critical border-status-critical/20',
+    failed: 'bg-status-critical/20 text-status-critical border-status-critical/30',
+    open: 'bg-blue-900/20 text-blue-400 border-blue-500/30',
+    in_progress: 'bg-yellow-900/20 text-yellow-400 border-yellow-500/30',
+    resolved: 'bg-green-900/20 text-green-400 border-green-500/30',
+    closed: 'bg-surface-2 text-gray-500 border-border-strong',
   };
 
   const labels: Record<TicketStatus, string> = {
+    created: 'Created',
+    routing_pending: 'Queue Pending',
+    routing_in_progress: 'AI Routing...',
+    assigned: 'Assigned',
+    degraded_assigned: 'Fallback Assigned',
+    unassigned: 'Unassigned',
+    failed: 'Failed',
     open: 'Open',
     in_progress: 'In Progress',
     resolved: 'Resolved',
@@ -50,9 +66,10 @@ const StatusBadge: React.FC<{ status: TicketStatus; large?: boolean }> = ({ stat
 
   return (
     <span
-      className={`inline-flex items-center rounded-full border font-medium ${styles[status]} ${large ? 'px-4 py-1.5 text-sm' : 'px-2.5 py-0.5 text-xs'
+      className={`inline-flex items-center gap-1.5 rounded uppercase tracking-wider font-mono font-bold border ${styles[status]} ${large ? 'px-3 py-1 text-xs' : 'px-2 py-0.5 text-[10px]'
         }`}
     >
+      {status === 'routing_in_progress' && <span className="w-1.5 h-1.5 rounded-full bg-status-warning animate-pulse"></span>}
       {labels[status]}
     </span>
   );
@@ -94,10 +111,10 @@ const CommentBubble: React.FC<{
     >
       <div
         className={`max-w-[80%] ${isCurrentUser
-            ? 'bg-blue-600 text-white rounded-l-xl rounded-tr-xl'
-            : isInternal
-              ? 'bg-amber-50 border border-amber-200 text-gray-800 rounded-r-xl rounded-tl-xl'
-              : 'bg-gray-100 text-gray-800 rounded-r-xl rounded-tl-xl'
+          ? 'bg-blue-600 text-white rounded-l-xl rounded-tr-xl'
+          : isInternal
+            ? 'bg-amber-50 border border-amber-200 text-gray-800 rounded-r-xl rounded-tl-xl'
+            : 'bg-gray-100 text-gray-800 rounded-r-xl rounded-tl-xl'
           } p-4 shadow-sm`}
       >
         {isInternal && (
@@ -324,6 +341,17 @@ export const TicketDetails: React.FC = () => {
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Ticket Description */}
+          {ticket.status === 'assigned' && ticket.mfis_factors && ticket.mfis_weights && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-standard">
+              <RoutingTransparencyPanel
+                factors={ticket.mfis_factors}
+                weights={ticket.mfis_weights}
+                confidence={ticket.ai_confidence || 0.85}
+                auditTraceId={ticket.audit_trace_id || `TRC-${ticket.id.slice(0, 8).toUpperCase()}`}
+              />
+            </div>
+          )}
+
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">
               Description
@@ -380,8 +408,8 @@ export const TicketDetails: React.FC = () => {
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder={isInternalNote ? 'Add an internal note...' : 'Type your reply...'}
                   className={`flex-1 px-4 py-2 border rounded-lg resize-none focus:ring-2 focus:border-transparent ${isInternalNote
-                      ? 'border-amber-300 bg-amber-50 focus:ring-amber-500'
-                      : 'border-gray-300 focus:ring-blue-500'
+                    ? 'border-amber-300 bg-amber-50 focus:ring-amber-500'
+                    : 'border-gray-300 focus:ring-blue-500'
                     }`}
                   rows={2}
                 />

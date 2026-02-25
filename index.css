@@ -2,23 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --primary-color: #3b82f6;
-  --secondary-color: #1e40af;
-}
+@layer base {
+  :root {
+    /* Infrastructure Canvas */
+    --background: 240 10% 4%;
+    --foreground: 0 0% 98%;
+    
+    /* Panel Surfaces */
+    --surface-1: 240 10% 7%;
+    --surface-2: 240 10% 9%;
+    --surface-3: 240 10% 12%;
+    
+    /* Branding - MATIE Core */
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
 
-.text-primary {
-  color: var(--primary-color);
-}
+    /* Observability Status Colors */
+    --status-operational: 142.1 70.6% 45.3%;
+    --status-degraded: 38 92% 50%;
+    --status-warning: 43 96% 56%;
+    --status-critical: 346.8 77.2% 49.8%;
+    --status-info: 217 91% 60%;
 
-.bg-primary {
-  background-color: var(--primary-color);
-}
+    /* Structural Hierarchy */
+    --border-default: 240 6% 20%;
+    --border-strong: 240 6% 35%;
+    --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
+    --panel-glow: 0 0 15px -3px var(--primary);
 
-.border-primary {
-  border-color: var(--primary-color);
-}
+    /* AI Confidence Spectrum */
+    --confidence-high: 142 71% 45%; 
+    --confidence-med: 43 96% 56%;
+    --confidence-low: 0 84% 60%;
+    
+    /* Typography Scale */
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    --font-sans: 'Inter', -apple-system, sans-serif;
 
-.hover\:bg-primary-dark:hover {
-  filter: brightness(0.9);
+    /* Motion Discipline */
+    --motion-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
+    --motion-standard: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    --motion-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }

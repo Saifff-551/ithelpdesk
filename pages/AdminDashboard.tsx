@@ -33,7 +33,7 @@ const StatCard: React.FC<{
     onClick?: () => void;
 }> = ({ title, value, icon, color, trend, onClick }) => (
     <div
-        className={`bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 ${onClick ? 'cursor-pointer hover:shadow-md transition-shadow' : ''}`}
+        className={`bg-surface-1 rounded-xl shadow-card border border-border-default p-6 ${onClick ? 'cursor-pointer hover:bg-surface-2 hover:border-border-strong transition-all duration-fast' : ''}`}
         onClick={onClick}
     >
         <div className="flex items-center justify-between">
@@ -72,19 +72,34 @@ const PriorityBadge: React.FC<{ priority: TicketPriority }> = ({ priority }) => 
 // Status Badge
 const StatusBadge: React.FC<{ status: TicketStatus }> = ({ status }) => {
     const colors: Record<TicketStatus, string> = {
-        open: 'bg-blue-100 text-blue-700',
-        in_progress: 'bg-yellow-100 text-yellow-700',
-        resolved: 'bg-green-100 text-green-700',
-        closed: 'bg-gray-100 text-gray-700',
+        created: 'bg-surface-3 text-gray-400 border border-border-default',
+        routing_pending: 'bg-status-info/10 text-status-info border border-status-info/20',
+        routing_in_progress: 'bg-status-warning/10 text-status-warning border border-status-warning/20',
+        assigned: 'bg-primary/10 text-primary border border-primary/20',
+        degraded_assigned: 'bg-status-degraded/10 text-status-degraded border border-status-degraded/20',
+        unassigned: 'bg-status-critical/10 text-status-critical border border-status-critical/20',
+        failed: 'bg-status-critical/20 text-status-critical border border-status-critical/30',
+        open: 'bg-blue-900/20 text-blue-400 border border-blue-500/30',
+        in_progress: 'bg-yellow-900/20 text-yellow-400 border border-yellow-500/30',
+        resolved: 'bg-green-900/20 text-green-400 border border-green-500/30',
+        closed: 'bg-surface-2 text-gray-500 border border-border-strong',
     };
     const labels: Record<TicketStatus, string> = {
+        created: 'Created',
+        routing_pending: 'Queue Pending',
+        routing_in_progress: 'AI Routing...',
+        assigned: 'Assigned',
+        degraded_assigned: 'Fallback Assigned',
+        unassigned: 'Unassigned',
+        failed: 'Failed',
         open: 'Open',
         in_progress: 'In Progress',
         resolved: 'Resolved',
         closed: 'Closed',
     };
     return (
-        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${colors[status]}`}>
+        <span className={`px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-mono font-bold ${colors[status]} flex items-center gap-1.5`}>
+            {status === 'routing_in_progress' && <span className="w-1.5 h-1.5 rounded-full bg-status-warning animate-pulse"></span>}
             {labels[status]}
         </span>
     );
@@ -214,11 +229,12 @@ export const AdminDashboard: React.FC = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                    <h1 className="text-2xl font-mono font-bold text-gray-100 flex items-center gap-3">
+                        <Zap className="h-6 w-6 text-primary drop-shadow-[var(--panel-glow)]" />
                         Welcome back, {profile?.full_name?.split(' ')[0]}!
                     </h1>
-                    <p className="text-gray-500 dark:text-gray-400 mt-1">
-                        Here's what's happening with {tenant?.name} IT Helpdesk today.
+                    <p className="text-gray-400 mt-2 font-mono text-sm max-w-xl">
+                        Tenant Active: <strong className="text-gray-200">{tenant?.name}</strong> • Live Infrastructure Observations & Active Workloads
                     </p>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -266,47 +282,48 @@ export const AdminDashboard: React.FC = () => {
 
             {/* MATIE AI Intelligence Metrics — Admin Only */}
             {checkUserPermission(profile?.role_id, 'view_ai_insights') ? (
-                <div className="bg-gradient-to-r from-purple-900/10 to-indigo-900/10 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-2xl border border-purple-200/30 dark:border-purple-800/30 p-6">
-                    <div className="flex items-center gap-3 mb-5">
-                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center text-white">
+                <div className="bg-surface-2 rounded-xl border border-border-strong p-6 relative overflow-hidden shadow-card">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+                    <div className="flex items-center gap-3 mb-6 border-b border-border-default pb-4">
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center text-primary shadow-[var(--panel-glow)]">
                             <Zap className="w-5 h-5" />
                         </div>
                         <div>
-                            <h2 className="font-bold text-gray-900 dark:text-white text-sm">MATIE Intelligence Engine</h2>
-                            <p className="text-xs text-gray-500">Adaptive Ticket Intelligence — Real-time Metrics</p>
+                            <h2 className="font-bold text-gray-200 text-sm uppercase tracking-wider">MATIE Intelligence Engine</h2>
+                            <p className="text-xs text-gray-500 font-mono mt-1">Adaptive Ticket Intelligence — Tenant Level</p>
                         </div>
-                        <span className="ml-auto px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-bold rounded-full flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                        <span className="ml-auto px-2.5 py-1 bg-status-operational/10 border border-status-operational/20 text-status-operational text-[10px] uppercase tracking-wider font-bold font-mono rounded-full flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-status-operational animate-pulse"></span>
                             Active
                         </span>
                     </div>
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border border-purple-100 dark:border-purple-800/20">
-                            <p className="text-xs text-gray-500 mb-1">AI Routing Accuracy</p>
-                            <p className="text-2xl font-black" style={{ color: primaryColor }}>{aiInsights ? `${(aiInsights.routingAccuracy * 100).toFixed(1)}%` : '—'}</p>
-                            <p className="text-xs text-gray-400 mt-1">{aiInsights ? `${aiInsights.aiProcessedTickets} tickets analyzed` : 'Computing...'}</p>
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 relative">
+                        <div className="bg-surface-1 rounded-lg p-4 border border-border-default hover:bg-surface-3 transition-colors duration-fast">
+                            <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-2">AI Routing Accuracy</p>
+                            <p className="text-3xl font-mono font-bold" style={{ color: primaryColor }}>{aiInsights ? `${(aiInsights.routingAccuracy * 100).toFixed(1)}%` : '—'}</p>
+                            <p className="text-xs text-status-info mt-2">{aiInsights ? `${aiInsights.aiProcessedTickets} workloads` : 'Computing...'}</p>
                         </div>
-                        <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border border-purple-100 dark:border-purple-800/20">
-                            <p className="text-xs text-gray-500 mb-1">Avg Resolution Time</p>
-                            <p className="text-2xl font-black text-blue-600">{aiInsights ? `${aiInsights.avgResolutionTimeHours}h` : '—'}</p>
-                            <p className="text-xs text-gray-400 mt-1">This week</p>
+                        <div className="bg-surface-1 rounded-lg p-4 border border-border-default hover:bg-surface-3 transition-colors duration-fast">
+                            <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Avg Resolution Time</p>
+                            <p className="text-3xl font-mono font-bold text-blue-500">{aiInsights ? `${aiInsights.avgResolutionTimeHours}h` : '—'}</p>
+                            <p className="text-xs text-gray-400 mt-2">Rolling 7 days</p>
                         </div>
-                        <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border border-purple-100 dark:border-purple-800/20">
-                            <p className="text-xs text-gray-500 mb-1">Escalation Prevention</p>
-                            <p className="text-2xl font-black text-emerald-600">{aiInsights ? `${(aiInsights.escalationPreventionRate * 100).toFixed(1)}%` : '—'}</p>
-                            <p className="text-xs text-gray-400 mt-1">High/urgent resolved</p>
+                        <div className="bg-surface-1 rounded-lg p-4 border border-border-default hover:bg-surface-3 transition-colors duration-fast">
+                            <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Escalation Prevention</p>
+                            <p className="text-3xl font-mono font-bold text-status-operational">{aiInsights ? `${(aiInsights.escalationPreventionRate * 100).toFixed(1)}%` : '—'}</p>
+                            <p className="text-xs text-gray-400 mt-2">Critical deflection</p>
                         </div>
-                        <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border border-purple-100 dark:border-purple-800/20">
-                            <p className="text-xs text-gray-500 mb-1">SLA Compliance</p>
-                            <p className="text-2xl font-black text-teal-600">{aiInsights ? `${(aiInsights.slaComplianceRate * 100).toFixed(1)}%` : '—'}</p>
-                            <p className="text-xs text-gray-400 mt-1">On-time delivery</p>
+                        <div className="bg-surface-1 rounded-lg p-4 border border-border-default hover:bg-surface-3 transition-colors duration-fast">
+                            <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-2">SLA Compliance</p>
+                            <p className="text-3xl font-mono font-bold text-teal-500">{aiInsights ? `${(aiInsights.slaComplianceRate * 100).toFixed(1)}%` : '—'}</p>
+                            <p className="text-xs text-gray-400 mt-2">Strict boundaries</p>
                         </div>
                     </div>
                 </div>
             ) : (
-                <div className="bg-gray-50 dark:bg-gray-800/30 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 text-center">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                        🔒 AI Intelligence Metrics are restricted to administrators.
+                <div className="bg-surface-2 rounded-xl border border-border-default p-6 text-center shadow-card opacity-80">
+                    <p className="text-sm text-gray-500 font-mono">
+                        🔒 Tenant Intelligence Metrics restricted to Identity Level: Admin
                     </p>
                 </div>
             )}
@@ -337,18 +354,18 @@ export const AdminDashboard: React.FC = () => {
             {/* Main Content Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Recent Tickets */}
-                <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-                    <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h2 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                            <TicketIcon className="w-5 h-5" style={{ color: primaryColor }} />
-                            Recent Tickets
+                <div className="lg:col-span-2 bg-surface-1 rounded-xl shadow-card border border-border-default overflow-hidden">
+                    <div className="flex items-center justify-between p-4 border-b border-border-strong bg-surface-2">
+                        <h2 className="text-sm font-bold text-gray-200 uppercase tracking-wider flex items-center gap-2">
+                            <TicketIcon className="w-5 h-5 flex-shrink-0" style={{ color: primaryColor }} />
+                            Recent Workloads
                         </h2>
                         <button
                             onClick={() => navigate('/dashboard/tickets')}
-                            className="text-sm font-medium flex items-center gap-1 hover:gap-2 transition-all"
+                            className="text-[10px] font-mono uppercase font-bold flex items-center gap-1 hover:gap-2 transition-all hover:bg-surface-3 px-2 py-1 rounded"
                             style={{ color: primaryColor }}
                         >
-                            View All <ArrowRight className="w-4 h-4" />
+                            View All <ArrowRight className="w-3.5 h-3.5" />
                         </button>
                     </div>
 
@@ -365,34 +382,34 @@ export const AdminDashboard: React.FC = () => {
                             </button>
                         </div>
                     ) : (
-                        <div className="divide-y divide-gray-100 dark:divide-gray-700">
+                        <div className="divide-y divide-border-default">
                             {recentTickets.map((ticket) => (
                                 <div
                                     key={ticket.id}
-                                    className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
+                                    className="p-4 hover:bg-surface-3 cursor-pointer transition-colors duration-fast"
                                     onClick={() => navigate(`/dashboard/tickets/${ticket.id}`)}
                                 >
                                     <div className="flex items-start justify-between gap-4">
                                         <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <span className="text-xs font-mono text-gray-400">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <span className="text-[10px] font-mono text-gray-500 bg-surface-2 border border-border-strong px-1.5 rounded">
                                                     #{ticket.id.slice(0, 8)}
                                                 </span>
                                                 <StatusBadge status={ticket.status} />
                                                 <PriorityBadge priority={ticket.priority} />
                                             </div>
-                                            <p className="font-medium text-gray-900 dark:text-white truncate">
+                                            <p className="font-semibold text-gray-200 truncate">
                                                 {ticket.subject}
                                             </p>
-                                            <p className="text-sm text-gray-500 mt-0.5">
-                                                {ticket.creator?.full_name || 'Unknown'} • {new Date(ticket.created_at).toLocaleDateString()}
+                                            <p className="text-xs text-gray-500 mt-1 font-mono">
+                                                ID: {ticket.creator?.full_name || 'SystemEvent'} • {new Date(ticket.created_at).toLocaleString()}
                                             </p>
                                         </div>
                                         {ticket.assignee && (
                                             <img
                                                 src={ticket.assignee.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(ticket.assignee.full_name)}&background=random`}
                                                 alt={ticket.assignee.full_name}
-                                                className="w-8 h-8 rounded-full"
+                                                className="w-8 h-8 rounded-full border border-border-strong"
                                                 title={`Assigned to ${ticket.assignee.full_name}`}
                                             />
                                         )}
@@ -406,7 +423,7 @@ export const AdminDashboard: React.FC = () => {
                 {/* Sidebar */}
                 <div className="space-y-6">
                     {/* Team Stats */}
-                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
+                    <div className="bg-surface-1 rounded-xl shadow-card border border-border-default p-5">
                         <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2 mb-4">
                             <Users className="w-5 h-5" style={{ color: primaryColor }} />
                             Team Overview
@@ -437,8 +454,8 @@ export const AdminDashboard: React.FC = () => {
                     {/* Top Agents */}
                     {topAgents.length > 0 && (
                         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
-                            <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2 mb-4">
-                                <Zap className="w-5 h-5" style={{ color: primaryColor }} />
+                            <h3 className="text-sm font-bold text-gray-200 uppercase tracking-wider flex items-center gap-2 mb-4">
+                                <Zap className="w-4 h-4" style={{ color: primaryColor }} />
                                 Top Performers
                             </h3>
                             <div className="space-y-3">
@@ -468,35 +485,35 @@ export const AdminDashboard: React.FC = () => {
 
                     {/* Quick Actions */}
                     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
-                        <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h3>
+                        <h3 className="text-sm font-bold text-gray-200 uppercase tracking-wider mb-4">Quick Actions</h3>
                         <div className="space-y-2">
                             <button
                                 onClick={() => navigate('/dashboard/tickets')}
-                                className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-left"
+                                className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-surface-3 border border-transparent hover:border-border-strong transition-all duration-fast text-left"
                             >
-                                <TicketIcon className="w-5 h-5 text-gray-400" />
-                                <span className="text-sm text-gray-700 dark:text-gray-300">View All Tickets</span>
+                                <TicketIcon className="w-4 h-4 text-gray-400" />
+                                <span className="text-xs font-mono text-gray-300">View All Tickets</span>
                             </button>
                             <button
                                 onClick={() => navigate('/dashboard/users')}
-                                className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-left"
+                                className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-surface-3 border border-transparent hover:border-border-strong transition-all duration-fast text-left"
                             >
-                                <Users className="w-5 h-5 text-gray-400" />
-                                <span className="text-sm text-gray-700 dark:text-gray-300">Manage Users</span>
+                                <Users className="w-4 h-4 text-gray-400" />
+                                <span className="text-xs font-mono text-gray-300">Manage Users</span>
                             </button>
                             <button
                                 onClick={() => navigate('/dashboard/slas')}
-                                className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-left"
+                                className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-surface-3 border border-transparent hover:border-border-strong transition-all duration-fast text-left"
                             >
-                                <Clock className="w-5 h-5 text-gray-400" />
-                                <span className="text-sm text-gray-700 dark:text-gray-300">Configure SLAs</span>
+                                <Clock className="w-4 h-4 text-gray-400" />
+                                <span className="text-xs font-mono text-gray-300">Configure SLAs</span>
                             </button>
                             <button
                                 onClick={() => navigate('/dashboard/branding')}
-                                className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-left"
+                                className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-surface-3 border border-transparent hover:border-border-strong transition-all duration-fast text-left"
                             >
-                                <BarChart3 className="w-5 h-5 text-gray-400" />
-                                <span className="text-sm text-gray-700 dark:text-gray-300">Customize Branding</span>
+                                <BarChart3 className="w-4 h-4 text-gray-400" />
+                                <span className="text-xs font-mono text-gray-300">Customize Branding</span>
                             </button>
                         </div>
                     </div>

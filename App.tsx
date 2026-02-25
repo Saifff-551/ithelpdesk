@@ -4,6 +4,7 @@ import { TenantProvider } from './services/TenantContext';
 import { AuthProvider } from './services/auth';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { V2ControlPlane } from './components/V2ControlPlane';
 import { Loader2 } from 'lucide-react';
 
 // Eagerly loaded pages (critical path)
@@ -37,53 +38,55 @@ export const App: React.FC = () => {
     <ErrorBoundary>
       <TenantProvider>
         <AuthProvider>
-          <Router>
-            <Suspense fallback={<LazyFallback />}>
-              <Routes>
-                {/* Public Routes */}
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
-                <Route path="/accept-invite/:token" element={<AcceptInvitePage />} />
-                <Route path="/pitch" element={<PitchPage />} />
-                <Route path="/patent" element={<PatentPage />} />
+          <V2ControlPlane>
+            <Router>
+              <Suspense fallback={<LazyFallback />}>
+                <Routes>
+                  {/* Public Routes */}
+                  <Route path="/" element={<LandingPage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route path="/accept-invite/:token" element={<AcceptInvitePage />} />
+                  <Route path="/pitch" element={<PitchPage />} />
+                  <Route path="/patent" element={<PatentPage />} />
 
-                {/* Dashboard Routes */}
-                <Route path="/dashboard" element={
-                  <ProtectedRoute>
-                    <DashboardLayout />
-                  </ProtectedRoute>
-                }>
-                  <Route index element={<AdminDashboard />} />
-                  <Route path="tickets" element={<TicketList />} />
-                  <Route path="tickets/:id" element={<TicketDetails />} />
-                  <Route path="kb" element={<KbPage />} />
-                  <Route path="users" element={
-                    <ProtectedRoute allowedRoles={['platform_admin', 'company_admin', 'it_manager']}>
-                      <UsersPage />
+                  {/* Dashboard Routes */}
+                  <Route path="/dashboard" element={
+                    <ProtectedRoute>
+                      <DashboardLayout />
                     </ProtectedRoute>
-                  } />
-                  <Route path="slas" element={
-                    <ProtectedRoute allowedRoles={['platform_admin', 'company_admin', 'it_manager']}>
-                      <SlaPage />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="branding" element={
-                    <ProtectedRoute allowedRoles={['platform_admin', 'company_admin']}>
-                      <BrandingPage />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="admin" element={
-                    <ProtectedRoute allowedRoles={['platform_admin']}>
-                      <PlatformAdminPage />
-                    </ProtectedRoute>
-                  } />
-                </Route>
+                  }>
+                    <Route index element={<AdminDashboard />} />
+                    <Route path="tickets" element={<TicketList />} />
+                    <Route path="tickets/:id" element={<TicketDetails />} />
+                    <Route path="kb" element={<KbPage />} />
+                    <Route path="users" element={
+                      <ProtectedRoute allowedRoles={['platform_admin', 'company_admin', 'it_manager']}>
+                        <UsersPage />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="slas" element={
+                      <ProtectedRoute allowedRoles={['platform_admin', 'company_admin', 'it_manager']}>
+                        <SlaPage />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="branding" element={
+                      <ProtectedRoute allowedRoles={['platform_admin', 'company_admin']}>
+                        <BrandingPage />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="admin" element={
+                      <ProtectedRoute allowedRoles={['platform_admin']}>
+                        <PlatformAdminPage />
+                      </ProtectedRoute>
+                    } />
+                  </Route>
 
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
-            </Suspense>
-          </Router>
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </Suspense>
+            </Router>
+          </V2ControlPlane>
         </AuthProvider>
       </TenantProvider>
     </ErrorBoundary>

@@ -78,12 +78,12 @@ export interface Invitation {
   created_at: string;
 }
 
-export type TicketStatus = 'open' | 'in_progress' | 'resolved' | 'closed';
+export type TicketStatus = 'created' | 'routing_pending' | 'routing_in_progress' | 'assigned' | 'degraded_assigned' | 'unassigned' | 'failed' | 'open' | 'in_progress' | 'resolved' | 'closed';
 export type TicketPriority = 'low' | 'medium' | 'high' | 'urgent';
 export type TicketCategory = 'hardware' | 'software' | 'network' | 'security' | 'access' | 'other';
 
 // Helper arrays for iterating over enums in UI
-export const TICKET_STATUSES: TicketStatus[] = ['open', 'in_progress', 'resolved', 'closed'];
+export const TICKET_STATUSES: TicketStatus[] = ['created', 'routing_pending', 'routing_in_progress', 'assigned', 'degraded_assigned', 'unassigned', 'failed', 'open', 'in_progress', 'resolved', 'closed'];
 export const TICKET_PRIORITIES: TicketPriority[] = ['low', 'medium', 'high', 'urgent'];
 export const TICKET_CATEGORIES: TicketCategory[] = ['hardware', 'software', 'network', 'security', 'access', 'other'];
 
@@ -130,6 +130,22 @@ export interface Ticket {
   creator?: Profile;
   assignee?: Profile;
   attachments?: TicketAttachment[];
+
+  // MATIE AI Intelligence Fields (Patent claims)
+  mfis_factors?: {
+    expertiseMatch: number;
+    availabilityScore: number;
+    historicalSuccess: number;
+    urgencyMultiplier: number;
+  };
+  mfis_weights?: {
+    w_expertise: number;
+    w_availability: number;
+    w_historical: number;
+    w_urgency: number;
+  };
+  ai_confidence?: number;
+  audit_trace_id?: string;
 }
 
 export interface TicketComment {

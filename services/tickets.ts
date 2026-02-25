@@ -44,6 +44,8 @@ const getUserProfile = async (userId: string): Promise<Profile | undefined> => {
       role_id: data.role_id,
       full_name: data.full_name,
       avatar_url: data.avatar_url,
+      email: data.email || '',
+      is_active: data.is_active ?? true,
     };
   } catch (error) {
     console.error('Error fetching user profile:', error);
@@ -167,7 +169,7 @@ export const createTicket = async (
 
     const docRef = await addDoc(ticketsCol, {
       ...ticketData,
-      status: ticketData.status || 'open',
+      status: ticketData.status || 'routing_pending',
       created_at: serverTimestamp(),
       updated_at: serverTimestamp(),
     });

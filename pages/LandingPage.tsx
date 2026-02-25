@@ -417,17 +417,17 @@ export const LandingPage: React.FC = () => {
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         {/* Badges */}
                         <div className="flex flex-wrap justify-center gap-4 mb-12">
-                            <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-full">
-                                <Shield className="w-5 h-5 text-green-500" />
-                                <span className="font-bold text-sm text-green-600 dark:text-green-400">Enterprise Secure</span>
-                            </div>
                             <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 border border-purple-500/20 rounded-full">
                                 <RocketIcon className="w-5 h-5 text-purple-500" />
-                                <span className="font-bold text-sm text-purple-600 dark:text-purple-400">Production Ready</span>
+                                <span className="font-bold text-sm text-purple-600 dark:text-purple-400">Enterprise Beta</span>
                             </div>
                             <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-full">
                                 <Eye className="w-5 h-5 text-blue-500" />
-                                <span className="font-bold text-sm text-blue-600 dark:text-blue-400">AI Explainable</span>
+                                <span className="font-bold text-sm text-blue-600 dark:text-blue-400">Explainable AI</span>
+                            </div>
+                            <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-full">
+                                <Shield className="w-5 h-5 text-green-500" />
+                                <span className="font-bold text-sm text-green-600 dark:text-green-400">SOC-2 Aligned</span>
                             </div>
                         </div>
 
@@ -550,6 +550,44 @@ export const LandingPage: React.FC = () => {
                                         </div>
                                     ))}
                                 </div>
+
+                                {/* Sigmoid Normalization Visualization */}
+                                <div className="mt-8 pt-8 border-t border-purple-800/20 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                                    <div>
+                                        <h4 className="font-bold text-purple-300 text-sm mb-2">Sigmoid Normalization $S(t)$</h4>
+                                        <p className="text-xs text-gray-400 leading-relaxed mb-4">
+                                            The raw MFIS signal ($\Sigma$) is mapped to a deterministic probability continuous curve $[0, 1]$ before routing decisions, protecting against unbounded algorithmic drift.
+                                        </p>
+                                        <div className="bg-black/30 rounded-xl p-3 font-mono text-[10px] text-gray-300 border border-purple-900/50">
+                                            <span className="text-pink-400">function</span> <span className="text-blue-300">sigmoid</span>(t) {'{'}
+                                            <br />&nbsp;&nbsp;<span className="text-pink-400">return</span> 1 / (1 + Math.exp(-t));
+                                            <br />{'}'}
+                                        </div>
+                                    </div>
+                                    <div className="relative h-32 flex items-center justify-center bg-black/20 rounded-xl border border-purple-900/30 overflow-hidden">
+                                        {/* Sigmoid SVG Curve */}
+                                        <svg viewBox="0 0 200 100" className="w-full h-full p-4 drop-shadow-[0_0_15px_rgba(168,85,247,0.4)]">
+                                            <g stroke="rgba(255,255,255,0.1)" strokeWidth="1">
+                                                <line x1="0" y1="50" x2="200" y2="50" />
+                                                <line x1="100" y1="0" x2="100" y2="100" />
+                                            </g>
+                                            <path
+                                                d="M 10 90 C 70 90, 80 10, 190 10"
+                                                fill="none"
+                                                stroke="url(#sigmoid-gradient)"
+                                                strokeWidth="4"
+                                                strokeLinecap="round"
+                                            />
+                                            <defs>
+                                                <linearGradient id="sigmoid-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                    <stop offset="0%" stopColor="#ec4899" />
+                                                    <stop offset="50%" stopColor="#8b5cf6" />
+                                                    <stop offset="100%" stopColor="#3b82f6" />
+                                                </linearGradient>
+                                            </defs>
+                                        </svg>
+                                    </div>
+                                </div>
                             </div>
 
                             {/* Data Flow */}
@@ -574,6 +612,29 @@ export const LandingPage: React.FC = () => {
                                         <h4 className="font-bold text-sm">Adaptive Optimization</h4>
                                     </div>
                                     <p className="text-xs text-gray-400 leading-relaxed">Feedback loop processes resolution outcomes to recalibrate model weights. Convergence improves accuracy by 15-20% monthly.</p>
+                                </div>
+                            </div>
+
+                            {/* Microservice Data Isolation Visual */}
+                            <div className="mt-12 bg-gray-800/30 rounded-2xl p-6 lg:p-8 border border-gray-700/50">
+                                <h3 className="text-lg font-bold text-gray-200 mb-6 text-center">Multi-Tenant Microservice Isolation</h3>
+                                <div className="flex flex-col md:flex-row items-center justify-center gap-4 lg:gap-8">
+                                    {[1, 2, 3].map((tenant) => (
+                                        <div key={tenant} className="flex-1 bg-gray-900/80 rounded-xl border border-gray-700 p-4 relative overflow-hidden group">
+                                            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-indigo-600/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            <div className="flex items-center justify-between border-b border-gray-800 pb-3 mb-3">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-2 h-2 rounded-full bg-green-500" />
+                                                    <span className="text-xs font-bold text-gray-300">Tenant {tenant}</span>
+                                                </div>
+                                                <Shield className="w-4 h-4 text-gray-500" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <div className="h-6 bg-gray-800/50 rounded flex items-center justify-center text-[10px] font-mono text-gray-400 border border-gray-700/50">Local Weights</div>
+                                                <div className="h-6 bg-gray-800/50 rounded flex items-center justify-center text-[10px] font-mono text-gray-400 border border-gray-700/50">JWT Auth Envelope</div>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>

@@ -54,13 +54,27 @@ const StatCard: React.FC<{
 // Status Badge Component
 const StatusBadge: React.FC<{ status: TicketStatus }> = ({ status }) => {
   const styles: Record<TicketStatus, string> = {
-    open: 'bg-blue-100 text-blue-800 border-blue-200',
-    in_progress: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-    resolved: 'bg-green-100 text-green-800 border-green-200',
-    closed: 'bg-gray-100 text-gray-800 border-gray-200',
+    created: 'bg-surface-3 text-gray-400 border-border-default',
+    routing_pending: 'bg-status-info/10 text-status-info border-status-info/20',
+    routing_in_progress: 'bg-status-warning/10 text-status-warning border-status-warning/20',
+    assigned: 'bg-primary/10 text-primary border-primary/20',
+    degraded_assigned: 'bg-status-degraded/10 text-status-degraded border-status-degraded/20',
+    unassigned: 'bg-status-critical/10 text-status-critical border-status-critical/20',
+    failed: 'bg-status-critical/20 text-status-critical border-status-critical/30',
+    open: 'bg-blue-900/20 text-blue-400 border-blue-500/30',
+    in_progress: 'bg-yellow-900/20 text-yellow-400 border-yellow-500/30',
+    resolved: 'bg-green-900/20 text-green-400 border-green-500/30',
+    closed: 'bg-surface-2 text-gray-500 border-border-strong',
   };
 
   const labels: Record<TicketStatus, string> = {
+    created: 'Created',
+    routing_pending: 'Queue Pending',
+    routing_in_progress: 'AI Routing...',
+    assigned: 'Assigned',
+    degraded_assigned: 'Fallback Assigned',
+    unassigned: 'Unassigned',
+    failed: 'Failed',
     open: 'Open',
     in_progress: 'In Progress',
     resolved: 'Resolved',
@@ -69,8 +83,9 @@ const StatusBadge: React.FC<{ status: TicketStatus }> = ({ status }) => {
 
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${styles[status]}`}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[10px] uppercase tracking-wider font-mono font-bold border ${styles[status]}`}
     >
+      {status === 'routing_in_progress' && <span className="w-1.5 h-1.5 rounded-full bg-status-warning animate-pulse"></span>}
       {labels[status]}
     </span>
   );
@@ -158,7 +173,6 @@ const CreateTicketModal: React.FC<{
         ...formData,
         tenant_id: tenantId,
         creator_id: userId,
-        status: 'open',
       });
       setFormData({ subject: '', description: '', category: 'software', priority: 'medium' });
       onClose();
@@ -422,8 +436,8 @@ export const TicketList: React.FC = () => {
           <button
             onClick={() => setShowFilters(!showFilters)}
             className={`inline-flex items-center gap-2 px-4 py-2 border rounded-lg transition-colors ${showFilters || Object.keys(filters).length > 0
-                ? 'bg-blue-50 border-blue-200 text-blue-700'
-                : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+              ? 'bg-blue-50 border-blue-200 text-blue-700'
+              : 'border-gray-300 text-gray-700 hover:bg-gray-50'
               }`}
           >
             <Filter className="w-5 h-5" />
