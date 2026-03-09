@@ -9,9 +9,11 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-// Slide 1 - Title Slide
+// ============================================================
+// Slide 1 — Title Slide
+// ============================================================
 const TitleSlide: React.FC = () => (
-    <div className="w-full h-full bg-gradient-to-br from-[#5e2b97] via-[#7b1fa2] to-[#6a1b9a] relative flex items-center justify-center">
+    <div className="w-full h-full bg-gradient-to-br from-[#5e2b97] via-[#7b1fa2] to-[#6a1b9a] relative flex items-center justify-center overflow-hidden">
         {/* Background effects */}
         <div className="absolute inset-0" style={{
             background: `radial-gradient(circle at 20% 30%, rgba(225,190,231,0.18), transparent 55%),
@@ -21,232 +23,387 @@ const TitleSlide: React.FC = () => (
         <div className="absolute w-[420px] h-[420px] -bottom-52 -left-40 rounded-full bg-gradient-to-br from-[rgba(225,190,231,0.25)] to-[rgba(255,255,255,0.08)]" />
         <div className="absolute w-[260px] h-[260px] top-24 left-[18%] rounded-full bg-gradient-to-br from-[rgba(225,190,231,0.25)] to-[rgba(255,255,255,0.08)] opacity-40" />
 
-        <div className="relative z-10 text-center px-24">
+        <div className="relative z-10 text-center px-12 lg:px-24">
             {/* Icon row */}
-            <div className="flex justify-center gap-4 mb-10 opacity-90">
-                <span className="material-icons text-white text-4xl">support_agent</span>
-                <span className="material-icons text-white text-4xl">business</span>
+            <div className="flex justify-center gap-4 mb-8 opacity-90">
+                <span className="material-icons text-white text-4xl">psychology</span>
                 <span className="material-icons text-white text-4xl">hub</span>
+                <span className="material-icons text-white text-4xl">support_agent</span>
             </div>
 
-            <h1 className="text-white text-[56px] font-bold leading-tight max-w-5xl mx-auto mb-6">
-                Centralized White-Label<br />
-                Enterprise AI Infrastructure Platform
+            <h1 className="text-white text-[42px] lg:text-[56px] font-bold leading-tight max-w-5xl mx-auto mb-4">
+                MATIE
             </h1>
+            <p className="text-white/90 text-[22px] lg:text-[28px] font-light leading-relaxed max-w-4xl mx-auto mb-3">
+                MetaMinds Adaptive Ticket Intelligence Engine
+            </p>
 
-            <div className="mx-auto mb-8 h-[3px] w-64 bg-gradient-to-r from-transparent via-white/70 to-transparent" />
+            <div className="mx-auto mb-6 h-[3px] w-64 bg-gradient-to-r from-transparent via-white/70 to-transparent" />
 
-            <p className="text-white/95 text-2xl font-light leading-relaxed max-w-3xl mx-auto mb-12">
-                A Multi-Tenant, Secure &amp; AI-Powered SaaS Solution
+            <p className="text-white/80 text-lg lg:text-xl font-light leading-relaxed max-w-3xl mx-auto mb-10">
+                Adaptive AI Infrastructure for Enterprise IT Operations
             </p>
 
             {/* Feature badges */}
-            <div className="flex justify-center gap-6 mb-16">
-                <div className="flex items-center gap-2 px-5 py-2 rounded-full bg-white/15 border border-white/25 backdrop-blur-sm">
-                    <span className="material-icons text-white text-lg">multiple_stop</span>
-                    <span className="text-white text-sm font-medium">Multi-Tenant</span>
-                </div>
-                <div className="flex items-center gap-2 px-5 py-2 rounded-full bg-white/15 border border-white/25 backdrop-blur-sm">
-                    <span className="material-icons text-white text-lg">lock</span>
-                    <span className="text-white text-sm font-medium">Secure</span>
-                </div>
-                <div className="flex items-center gap-2 px-5 py-2 rounded-full bg-white/15 border border-white/25 backdrop-blur-sm">
-                    <span className="material-icons text-white text-lg">psychology</span>
-                    <span className="text-white text-sm font-medium">AI-Powered</span>
-                </div>
+            <div className="flex flex-wrap justify-center gap-4 mb-12">
+                {[
+                    { icon: 'route', label: 'Adaptive Routing' },
+                    { icon: 'visibility', label: 'Explainable AI' },
+                    { icon: 'trending_up', label: 'Self-Learning' },
+                ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-2 px-5 py-2 rounded-full bg-white/15 border border-white/25 backdrop-blur-sm">
+                        <span className="material-icons text-white text-lg">{item.icon}</span>
+                        <span className="text-white text-sm font-medium">{item.label}</span>
+                    </div>
+                ))}
             </div>
 
-            <div className="absolute bottom-10 inset-x-0">
+            <div className="mt-6">
+                <p className="text-white/70 text-base italic">
+                    "Transforming IT Support with Explainable AI Routing"
+                </p>
+            </div>
+
+            <div className="absolute bottom-8 inset-x-0">
                 <p className="text-white/85 text-base tracking-wide">
                     Presented by <span className="font-semibold">MetaMinds</span> ·
-                    <span className="font-light">CSE (Artificial Intelligence &amp; Machine Learning)</span>
+                    <span className="font-light"> CSE (Artificial Intelligence &amp; Machine Learning)</span>
                 </p>
             </div>
         </div>
     </div>
 );
 
-// Slide 2 - Problem Statement
+// ============================================================
+// Slide 2 — The Problem
+// ============================================================
 const ProblemSlide: React.FC = () => (
     <div className="w-full h-full bg-white">
-        <div className="h-[90px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
-            <h1 className="text-white text-[38px] font-bold tracking-wide">Problem Statement</h1>
-        </div>
-
-        <div className="flex h-[calc(100%-90px)]">
-            <div className="w-3/5 px-16 py-14 flex flex-col justify-center space-y-7">
-                {[
-                    { icon: 'schedule', title: 'Ticket Delays', desc: 'Long response times frustrate employees and significantly reduce productivity.' },
-                    { icon: 'trending_down', title: 'Inconsistent Service Quality', desc: 'Variations in support quality across teams, locations, and time periods.' },
-                    { icon: 'storage', title: 'Knowledge Silos', desc: 'Critical information remains isolated within individuals or disconnected systems.' },
-                    { icon: 'bar_chart', title: 'Limited Analytics & Visibility', desc: 'Lack of actionable insights into performance metrics and operational bottlenecks.' },
-                    { icon: 'security', title: 'Security & Compliance Risks', desc: 'Increased risk of data exposure due to fragmented and unsecured information storage.' },
-                ].map((item, i) => (
-                    <div key={i} className="flex gap-4 items-start">
-                        <span className="material-icons text-[#6A1B9A] text-[30px]">{item.icon}</span>
-                        <div>
-                            <h3 className="text-[#6A1B9A] font-semibold text-[20px] mb-1">{item.title}</h3>
-                            <p className="text-gray-700 text-[18px] leading-relaxed">{item.desc}</p>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            <div className="w-2/5 py-14 pr-16 flex items-center">
-                <div className="w-full h-[520px] rounded-2xl overflow-hidden shadow-xl bg-gradient-to-br from-purple-100 to-purple-50 flex items-center justify-center">
-                    <div className="text-center">
-                        <span className="material-icons text-[#6A1B9A] text-[120px] opacity-30">support_agent</span>
-                        <p className="text-[#6A1B9A] text-xl font-medium mt-4">IT Support Challenges</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-);
-
-// Slide 3 - Existing Solutions & Limitations  
-const LimitationsSlide: React.FC = () => (
-    <div className="w-full h-full bg-white">
-        <div className="h-[90px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
-            <h1 className="text-white text-[38px] font-bold tracking-wide">Existing Solutions & Limitations</h1>
-        </div>
-
-        <div className="flex h-[calc(100%-90px)]">
-            {/* Traditional Systems */}
-            <div className="w-1/2 px-16 py-14 flex flex-col">
-                <div className="mb-8">
-                    <h2 className="text-[26px] font-semibold text-red-700 flex items-center gap-2 mb-2">
-                        <span className="material-icons text-[30px]">desktop_windows</span>
-                        Traditional Routing Systems
-                    </h2>
-                    <div className="w-20 h-[3px] bg-red-500" />
-                </div>
-
-                <div className="space-y-4">
-                    {['High setup and infrastructure cost', 'Requires on-premise maintenance', 'Limited scalability for growing organizations', 'Complex integrations and upgrades', 'Poor support for multi-tenant environments'].map((item, i) => (
-                        <div key={i} className="flex items-center gap-3 p-4 rounded-lg border border-red-200 bg-red-50">
-                            <span className="material-icons text-red-500">close</span>
-                            <span className="text-gray-800 text-[20px]">{item}</span>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {/* Modern SaaS */}
-            <div className="w-1/2 px-16 py-14 flex flex-col">
-                <div className="mb-8">
-                    <h2 className="text-[26px] font-semibold text-[#6A1B9A] flex items-center gap-2 mb-2">
-                        <span className="material-icons text-[30px]">cloud</span>
-                        Modern SaaS Routing Platforms
-                    </h2>
-                    <div className="w-20 h-[3px] bg-[#6A1B9A]" />
-                </div>
-
-                <div className="space-y-4">
-                    {['Cloud-based access from anywhere', 'Scalable infrastructure on demand', 'Automatic updates and maintenance', 'Easy API and third-party integrations', 'Designed for secure multi-tenant usage'].map((item, i) => (
-                        <div key={i} className="flex items-center gap-3 p-4 rounded-lg border border-purple-200 bg-purple-50">
-                            <span className="material-icons text-[#6A1B9A]">check_circle</span>
-                            <span className="text-gray-800 text-[20px]">{item}</span>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </div>
-    </div>
-);
-
-// Slide 4 - Proposed Solution
-const SolutionSlide: React.FC = () => (
-    <div className="w-full h-full bg-white">
-        <div className="h-[90px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
-            <h1 className="text-white text-[38px] font-bold tracking-wide">Proposed Solution</h1>
-        </div>
-
-        <div className="h-[calc(100%-90px)] flex flex-col justify-center px-20">
-            {/* Core Idea */}
-            <div className="text-center mb-14">
-                <div className="inline-block px-14 py-10 rounded-2xl border border-purple-200 bg-purple-50">
-                    <div className="flex justify-center gap-4 mb-4">
-                        <span className="material-icons text-[#6A1B9A] text-[44px]">hub</span>
-                        <span className="material-icons text-[#6A1B9A] text-[44px]">business</span>
-                    </div>
-                    <h2 className="text-[#6A1B9A] text-[44px] font-semibold leading-tight">
-                        Single Platform,<br />Multiple Companies
-                    </h2>
-                    <div className="w-28 h-[3px] bg-[#6A1B9A] mx-auto mt-6" />
-                </div>
-            </div>
-
-            {/* Features Grid */}
-            <div className="grid grid-cols-3 gap-8 max-w-5xl mx-auto">
-                {[
-                    { icon: 'account_tree', title: 'Multi-Tenant Architecture', desc: 'Secure data isolation per company on shared infrastructure.' },
-                    { icon: 'palette', title: 'White-Label Customization', desc: 'Company-specific branding, logos, and custom domains.' },
-                    { icon: 'psychology', title: 'AI-Powered Automation', desc: 'Intelligent routing, chat assistance, and knowledge support.' },
-                    { icon: 'insights', title: 'Centralized Analytics', desc: 'Dashboards, KPIs, and performance insights per organization.' },
-                    { icon: 'security', title: 'Enterprise-Grade Security', desc: 'Encryption, role-based access, and compliance readiness.' },
-                    { icon: 'speed', title: 'Rapid Deployment', desc: 'Cloud-based platform with quick onboarding and scalability.' },
-                ].map((item, i) => (
-                    <div key={i} className="p-6 rounded-xl border border-purple-200 bg-white text-center">
-                        <span className="material-icons text-[#6A1B9A] text-[42px] mb-3">{item.icon}</span>
-                        <h3 className="text-[#6A1B9A] font-semibold text-[20px] mb-2">{item.title}</h3>
-                        <p className="text-gray-700 text-[18px] leading-relaxed">{item.desc}</p>
-                    </div>
-                ))}
-            </div>
-        </div>
-    </div>
-);
-
-// Slide 5 - Multi-Tenant Architecture
-const ArchitectureSlide: React.FC = () => (
-    <div className="w-full h-full bg-white">
         <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
-            <h1 className="text-[40px] font-bold text-white">Multi-Tenant Architecture</h1>
+            <h1 className="text-white text-[38px] font-bold tracking-wide">The Problem</h1>
         </div>
 
         <div className="flex h-[calc(100%-85px)]">
-            <div className="w-[45%] px-16 py-12 flex flex-col justify-center">
-                <div className="mb-8">
-                    <div className="flex items-center gap-3 mb-4">
-                        <span className="material-icons text-[#6A1B9A] text-4xl">account_tree</span>
-                        <h2 className="text-[32px] font-bold text-[#6A1B9A]">Isolated & Secure</h2>
+            <div className="w-3/5 px-12 lg:px-16 py-10 flex flex-col justify-center space-y-5">
+                <h2 className="text-[#6A1B9A] text-[24px] font-bold mb-2">Enterprise IT Support Problems</h2>
+                {[
+                    { icon: 'schedule', title: 'Ticket Delays', desc: 'Reduce employee productivity and satisfaction.' },
+                    { icon: 'balance', title: 'Manual Assignment', desc: 'Causes workload imbalance across support agents.' },
+                    { icon: 'visibility_off', title: 'Lack of Visibility', desc: 'No real-time insights into support performance.' },
+                    { icon: 'warning', title: 'Late Escalations', desc: 'Escalations happen after the damage is done.' },
+                    { icon: 'lock', title: 'No AI Transparency', desc: 'Traditional helpdesks use black-box decision making.' },
+                ].map((item, i) => (
+                    <div key={i} className="flex gap-4 items-start">
+                        <span className="material-icons text-[#6A1B9A] text-[28px] mt-0.5">{item.icon}</span>
+                        <div>
+                            <h3 className="text-[#6A1B9A] font-semibold text-[18px] mb-0.5">{item.title}</h3>
+                            <p className="text-gray-700 text-[16px] leading-relaxed">{item.desc}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <div className="w-2/5 py-10 pr-12 flex items-center">
+                <div className="w-full rounded-2xl overflow-hidden shadow-xl bg-gradient-to-br from-purple-100 to-purple-50 p-8 flex flex-col items-center justify-center gap-3">
+                    <p className="text-[#6A1B9A] text-lg font-semibold mb-4">Typical IT Support Flow</p>
+                    {['Employee', 'Ticket', 'Manual Assignment', 'Delays', 'Escalation'].map((step, i) => (
+                        <React.Fragment key={i}>
+                            <div className="bg-white rounded-xl shadow-md px-6 py-3 border border-purple-200 w-full text-center">
+                                <span className="text-[#6A1B9A] font-medium text-[16px]">{step}</span>
+                            </div>
+                            {i < 4 && <span className="material-icons text-[#6A1B9A] text-2xl">arrow_downward</span>}
+                        </React.Fragment>
+                    ))}
+                </div>
+            </div>
+        </div>
+    </div>
+);
+
+// ============================================================
+// Slide 3 — Limitations of Existing Systems
+// ============================================================
+const LimitationsSlide: React.FC = () => (
+    <div className="w-full h-full bg-white">
+        <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
+            <h1 className="text-white text-[38px] font-bold tracking-wide">Limitations of Existing Systems</h1>
+        </div>
+
+        <div className="h-[calc(100%-85px)] flex flex-col justify-center px-16">
+            <div className="grid grid-cols-2 gap-6 max-w-4xl mx-auto mb-10">
+                {[
+                    { system: 'Traditional Helpdesk', limitation: 'Static ticket routing', icon: 'desktop_windows', color: '#ef4444' },
+                    { system: 'Chatbots', limitation: 'Limited context understanding', icon: 'smart_toy', color: '#f59e0b' },
+                    { system: 'AI Automation Tools', limitation: 'Black-box decisions', icon: 'memory', color: '#f97316' },
+                    { system: 'Ticketing Systems', limitation: 'No predictive escalation', icon: 'confirmation_number', color: '#6b7280' },
+                ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-4 p-5 rounded-xl border-2 border-red-200 bg-red-50">
+                        <span className="material-icons text-3xl" style={{ color: item.color }}>{item.icon}</span>
+                        <div>
+                            <h3 className="font-semibold text-[18px] text-gray-800">{item.system}</h3>
+                            <p className="text-gray-600 text-[16px]">{item.limitation}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <div className="max-w-3xl mx-auto text-center bg-gradient-to-r from-purple-50 to-indigo-50 rounded-2xl p-6 border border-purple-200">
+                <span className="material-icons text-[#6A1B9A] text-4xl mb-2">lightbulb</span>
+                <p className="text-[#6A1B9A] text-[20px] font-semibold">
+                    Current systems <span className="text-red-500">react</span> to problems. MATIE <span className="text-green-600">predicts and optimizes</span> them.
+                </p>
+            </div>
+        </div>
+    </div>
+);
+
+// ============================================================
+// Slide 4 — Introducing MATIE
+// ============================================================
+const IntroducingMATIESlide: React.FC = () => (
+    <div className="w-full h-full bg-white">
+        <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
+            <h1 className="text-white text-[38px] font-bold tracking-wide">Introducing MATIE</h1>
+        </div>
+
+        <div className="h-[calc(100%-85px)] flex flex-col justify-center px-16">
+            {/* Title */}
+            <div className="text-center mb-10">
+                <div className="inline-block px-10 py-6 rounded-2xl border border-purple-200 bg-purple-50">
+                    <span className="material-icons text-[#6A1B9A] text-[48px] mb-2">psychology</span>
+                    <h2 className="text-[#6A1B9A] text-[36px] font-bold">MATIE = Adaptive AI Routing Engine</h2>
+                </div>
+            </div>
+
+            {/* Capabilities */}
+            <div className="grid grid-cols-3 gap-6 max-w-5xl mx-auto mb-10">
+                {[
+                    { icon: 'route', title: 'Intelligent Routing', desc: 'Optimal agent assignment' },
+                    { icon: 'trending_up', title: 'Predictive Escalation', desc: 'Detect before it happens' },
+                    { icon: 'auto_fix_high', title: 'Self-Learning', desc: 'Workload optimization' },
+                    { icon: 'visibility', title: 'Explainable AI', desc: 'Transparent decision logic' },
+                    { icon: 'account_tree', title: 'Multi-Tenant', desc: 'Enterprise architecture' },
+                    { icon: 'speed', title: 'Real-Time', desc: 'Sub-200ms routing' },
+                ].map((item, i) => (
+                    <div key={i} className="p-5 rounded-xl border border-purple-200 bg-white text-center shadow-sm">
+                        <span className="material-icons text-[#6A1B9A] text-[36px] mb-2">{item.icon}</span>
+                        <h3 className="text-[#6A1B9A] font-semibold text-[17px] mb-1">{item.title}</h3>
+                        <p className="text-gray-600 text-[15px]">{item.desc}</p>
+                    </div>
+                ))}
+            </div>
+
+            {/* Architecture Flow */}
+            <div className="flex items-center justify-center gap-3 max-w-4xl mx-auto">
+                {['Ticket Input', 'NLP Analysis', 'MFIS Engine', 'Escalation Prediction', 'Agent Ranking', 'Adaptive Routing'].map((step, i) => (
+                    <React.Fragment key={i}>
+                        <div className="bg-gradient-to-br from-[#6A1B9A] to-[#7B1FA2] rounded-lg px-3 py-2 text-white text-[12px] font-medium shadow-md text-center min-w-[90px]">
+                            {step}
+                        </div>
+                        {i < 5 && <span className="material-icons text-[#6A1B9A] text-xl">arrow_forward</span>}
+                    </React.Fragment>
+                ))}
+            </div>
+        </div>
+    </div>
+);
+
+// ============================================================
+// Slide 5 — Core Innovation (MFIS Algorithm)
+// ============================================================
+const MFISSlide: React.FC = () => (
+    <div className="w-full h-full bg-white">
+        <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
+            <h1 className="text-white text-[38px] font-bold tracking-wide">Core Innovation — MFIS Algorithm</h1>
+        </div>
+
+        <div className="h-[calc(100%-85px)] flex flex-col justify-center px-16">
+            <div className="max-w-5xl mx-auto w-full">
+                {/* Formula */}
+                <div className="bg-[#0d0a12] rounded-2xl p-8 mb-8 shadow-xl">
+                    <h2 className="text-purple-300 text-[22px] font-bold mb-4 flex items-center gap-2">
+                        <span className="material-icons text-[28px]">functions</span>
+                        Multi-Factor Intelligence Scoring (MFIS)
+                    </h2>
+                    <div className="font-mono text-[15px] text-gray-300 bg-black/40 rounded-xl p-6 leading-loose">
+                        <span className="text-purple-400 font-bold">Final Score</span> ={' '}
+                        <span className="text-indigo-300">(W₁ × Expertise Match)</span> +{' '}
+                        <span className="text-blue-300">(W₂ × Sentiment Score)</span> +{' '}
+                        <span className="text-cyan-300">(W₃ × Workload Index)</span> +{' '}
+                        <span className="text-teal-300">(W₄ × SLA Urgency)</span> +{' '}
+                        <span className="text-emerald-300">(W₅ × Escalation Probability)</span>
+                        <br /><br />
+                        <span className="text-pink-400">Then:</span>{' '}
+                        <span className="text-amber-300">Sigmoid Normalization → Final Ranking</span>
+                    </div>
+                </div>
+
+                {/* Weight Cards */}
+                <div className="grid grid-cols-5 gap-4 mb-6">
+                    {[
+                        { label: 'Expertise', weight: '0.30', color: 'from-indigo-500 to-indigo-600' },
+                        { label: 'Sentiment', weight: '0.15', color: 'from-blue-500 to-blue-600' },
+                        { label: 'Workload', weight: '0.20', color: 'from-cyan-500 to-cyan-600' },
+                        { label: 'SLA', weight: '0.20', color: 'from-teal-500 to-teal-600' },
+                        { label: 'Escalation', weight: '0.15', color: 'from-emerald-500 to-emerald-600' },
+                    ].map((item, i) => (
+                        <div key={i} className={`bg-gradient-to-br ${item.color} rounded-xl p-4 text-center text-white shadow-md`}>
+                            <p className="text-[28px] font-black">{item.weight}</p>
+                            <p className="text-sm font-medium opacity-90">W{i + 1} · {item.label}</p>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Key Properties */}
+                <div className="grid grid-cols-3 gap-4">
+                    {[
+                        { icon: 'tune', title: 'Dynamic Weights', desc: 'Adapts to routing success over time' },
+                        { icon: 'visibility', title: 'Explainable Factors', desc: 'Every score is traceable' },
+                        { icon: 'autorenew', title: 'Adaptive Recalibration', desc: 'Self-learning feedback loop' },
+                    ].map((item, i) => (
+                        <div key={i} className="flex items-start gap-3 bg-purple-50 rounded-xl p-4 border border-purple-200">
+                            <span className="material-icons text-[#6A1B9A] text-[24px] mt-0.5">{item.icon}</span>
+                            <div>
+                                <h4 className="text-[#6A1B9A] font-semibold text-[15px]">{item.title}</h4>
+                                <p className="text-gray-600 text-[13px]">{item.desc}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    </div>
+);
+
+// ============================================================
+// Slide 6 — Explainable AI (Trust Layer)
+// ============================================================
+const ExplainableAISlide: React.FC = () => (
+    <div className="w-full h-full bg-white">
+        <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
+            <h1 className="text-white text-[38px] font-bold tracking-wide">Explainable AI — Trust Layer</h1>
+        </div>
+
+        <div className="flex h-[calc(100%-85px)]">
+            <div className="w-1/2 px-12 py-10 flex flex-col justify-center">
+                <div className="mb-6">
+                    <div className="flex items-center gap-3 mb-3">
+                        <span className="material-icons text-[#6A1B9A] text-4xl">visibility</span>
+                        <h2 className="text-[28px] font-bold text-[#6A1B9A]">Why This Decision?</h2>
                     </div>
                     <div className="w-24 h-1 bg-[#6A1B9A]" />
                 </div>
 
-                <div className="space-y-5">
+                <p className="text-gray-700 text-[17px] leading-relaxed mb-6">
+                    Most AI tools are <span className="font-bold text-red-500">black boxes</span>. 
+                    MATIE shows <span className="font-bold text-green-600">exactly why</span> a decision happened — making every routing choice transparent and auditable.
+                </p>
+
+                <div className="space-y-3">
                     {[
-                        { icon: 'database', title: 'Isolated Data', desc: 'Each tenant has separate database instances' },
-                        { icon: 'cloud_queue', title: 'Shared Infrastructure', desc: 'Common application layer and resources' },
-                        { icon: 'branding_watermark', title: 'Dedicated Branding', desc: 'Custom logos, colors, and domains per tenant' },
-                        { icon: 'trending_up', title: 'Scalable Resources', desc: 'Dynamic allocation based on tenant needs' },
+                        { icon: 'verified', text: 'AI Transparency', desc: 'Every factor visible to managers' },
+                        { icon: 'policy', text: 'Auditability', desc: 'Immutable decision logs' },
+                        { icon: 'handshake', text: 'Trust in Automation', desc: 'Teams understand and trust AI' },
                     ].map((item, i) => (
-                        <div key={i} className="flex items-start gap-4">
-                            <div className="mt-1">
-                                <span className="material-icons text-[#6A1B9A] text-3xl">{item.icon}</span>
-                            </div>
+                        <div key={i} className="flex items-center gap-3 bg-purple-50 rounded-lg p-4 border border-purple-200">
+                            <span className="material-icons text-[#6A1B9A] text-xl">{item.icon}</span>
                             <div>
-                                <h3 className="text-[#6A1B9A] font-semibold text-[24px] mb-1">{item.title}</h3>
-                                <p className="text-gray-700 text-[20px] leading-relaxed">{item.desc}</p>
+                                <span className="text-[#6A1B9A] font-semibold text-[16px]">{item.text}</span>
+                                <p className="text-gray-500 text-[13px]">{item.desc}</p>
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
 
-            <div className="w-[55%] py-12 pr-16 flex items-center">
-                <div className="w-full h-[520px] rounded-2xl overflow-hidden shadow-2xl border-4 border-[#E1BEE7] bg-gradient-to-br from-purple-50 to-white flex flex-col items-center justify-center">
-                    <div className="bg-[#6A1B9A] text-white rounded-2xl px-8 py-4 text-xl font-semibold mb-8 shadow-lg">
-                        Central Platform
+            <div className="w-1/2 py-10 pr-12 flex items-center">
+                <div className="w-full bg-[#0d0a12] rounded-2xl p-6 shadow-2xl border border-gray-700">
+                    <div className="flex items-center gap-2 mb-4">
+                        <div className="w-3 h-3 rounded-full bg-red-400/80" />
+                        <div className="w-3 h-3 rounded-full bg-amber-400/80" />
+                        <div className="w-3 h-3 rounded-full bg-green-400/80" />
+                        <span className="ml-3 text-xs text-gray-400 font-mono">MATIE Decision Report — TK-4521</span>
                     </div>
-                    <div className="flex gap-8">
-                        {['Company A', 'Company B', 'Company C'].map((company, i) => (
-                            <div key={i} className="flex flex-col items-center">
-                                <div className="w-1 h-8 bg-[#6A1B9A]" />
-                                <div className="bg-white border-2 border-[#6A1B9A] rounded-xl px-6 py-4 shadow-md">
-                                    <span className="material-icons text-[#6A1B9A] text-2xl block mb-2">business</span>
-                                    <span className="text-[#6A1B9A] font-medium">{company}</span>
+                    <div className="font-mono text-[14px] leading-loose space-y-1">
+                        <div className="flex justify-between text-gray-300">
+                            <span>Expertise Match</span>
+                            <span><span className="text-cyan-400">0.92</span> × <span className="text-purple-400">0.25</span> = <span className="text-green-400 font-bold">0.23</span></span>
+                        </div>
+                        <div className="flex justify-between text-gray-300">
+                            <span>Availability</span>
+                            <span><span className="text-cyan-400">0.70</span> × <span className="text-purple-400">0.20</span> = <span className="text-green-400 font-bold">0.14</span></span>
+                        </div>
+                        <div className="flex justify-between text-gray-300">
+                            <span>Historical Success</span>
+                            <span><span className="text-cyan-400">0.85</span> × <span className="text-purple-400">0.20</span> = <span className="text-green-400 font-bold">0.17</span></span>
+                        </div>
+                        <div className="flex justify-between text-gray-300">
+                            <span>Urgency Multiplier</span>
+                            <span><span className="text-cyan-400">0.60</span> × <span className="text-purple-400">0.15</span> = <span className="text-green-400 font-bold">0.09</span></span>
+                        </div>
+                        <div className="flex justify-between text-gray-300">
+                            <span>Escalation Risk</span>
+                            <span><span className="text-cyan-400">0.55</span> × <span className="text-purple-400">0.20</span> = <span className="text-green-400 font-bold">0.11</span></span>
+                        </div>
+                        <div className="border-t border-gray-600 my-2 pt-2 flex justify-between text-white font-bold text-[16px]">
+                            <span>Total Score</span>
+                            <span className="text-amber-400 text-[20px]">0.74</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+);
+
+// ============================================================
+// Slide 7 — System Architecture
+// ============================================================
+const ArchitectureSlide: React.FC = () => (
+    <div className="w-full h-full bg-white">
+        <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
+            <h1 className="text-white text-[38px] font-bold tracking-wide">System Architecture</h1>
+        </div>
+
+        <div className="flex h-[calc(100%-85px)]">
+            <div className="w-[55%] px-12 py-8 flex flex-col justify-center">
+                <h2 className="text-[#6A1B9A] text-[26px] font-bold mb-6">MATIE Infrastructure Stack</h2>
+                <div className="flex flex-col gap-3">
+                    {[
+                        { name: 'Frontend', tech: 'React + TypeScript Control Plane', color: '#c4b5fd', icon: 'web' },
+                        { name: 'Backend', tech: 'Node.js + API Layer', color: '#a78bfa', icon: 'dns' },
+                        { name: 'AI Engine', tech: 'MFIS + Escalation Prediction', color: '#8b5cf6', icon: 'psychology' },
+                        { name: 'Data Layer', tech: 'Firestore / Redis', color: '#7c3aed', icon: 'storage' },
+                        { name: 'Cloud Layer', tech: 'Async Worker Queue', color: '#6d28d9', icon: 'cloud' },
+                    ].map((layer, i) => (
+                        <div key={i} className="flex items-center gap-4 p-5 rounded-xl text-white shadow-md" style={{ backgroundColor: layer.color }}>
+                            <span className="material-icons text-3xl">{layer.icon}</span>
+                            <div>
+                                <h3 className="text-xl font-bold">{layer.name}</h3>
+                                <p className="text-white/90 text-[15px]">{layer.tech}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div className="w-[45%] py-8 pr-12 flex items-center">
+                <div className="w-full rounded-2xl bg-gradient-to-br from-purple-50 to-white border-2 border-[#E1BEE7] p-8 shadow-xl">
+                    <h3 className="text-[#6A1B9A] text-[20px] font-bold mb-6 text-center">Enterprise Features</h3>
+                    <div className="space-y-4">
+                        {[
+                            { icon: 'shield', title: 'Multi-Tenant Isolation', desc: 'Complete data separation per organization' },
+                            { icon: 'sync', title: 'Async Routing', desc: 'Non-blocking ticket processing pipeline' },
+                            { icon: 'memory', title: 'Circuit Breakers', desc: 'Resilient AI service architecture' },
+                            { icon: 'speed', title: 'Sub-200ms Latency', desc: 'Real-time routing decisions at scale' },
+                        ].map((item, i) => (
+                            <div key={i} className="flex items-start gap-3">
+                                <div className="w-10 h-10 bg-[#6A1B9A] rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <span className="material-icons text-white text-xl">{item.icon}</span>
+                                </div>
+                                <div>
+                                    <h4 className="text-[#6A1B9A] font-semibold text-[16px]">{item.title}</h4>
+                                    <p className="text-gray-600 text-[14px]">{item.desc}</p>
                                 </div>
                             </div>
                         ))}
@@ -257,470 +414,219 @@ const ArchitectureSlide: React.FC = () => (
     </div>
 );
 
-// Slide 6 - White-Label Concept
-const WhiteLabelSlide: React.FC = () => (
+// ============================================================
+// Slide 8 — Observability Control Plane
+// ============================================================
+const ObservabilitySlide: React.FC = () => (
+    <div className="w-full h-full bg-[#0d0a12] text-white">
+        <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
+            <h1 className="text-white text-[38px] font-bold tracking-wide">Observability Control Plane</h1>
+        </div>
+
+        <div className="h-[calc(100%-85px)] flex flex-col justify-center px-16">
+            {/* Metric Cards */}
+            <div className="grid grid-cols-4 gap-5 mb-8 max-w-5xl mx-auto w-full">
+                {[
+                    { label: 'System Health', value: '99.9%', icon: 'monitor_heart', color: '#22c55e' },
+                    { label: 'AI Routing Accuracy', value: '94.2%', icon: 'psychology', color: '#8b5cf6' },
+                    { label: 'Queue Depth', value: '12', icon: 'queue', color: '#3b82f6' },
+                    { label: 'Agent Workload', value: 'Balanced', icon: 'groups', color: '#f59e0b' },
+                ].map((item, i) => (
+                    <div key={i} className="bg-gray-800/60 rounded-xl p-5 border border-gray-700/50 text-center">
+                        <span className="material-icons text-3xl mb-2" style={{ color: item.color }}>{item.icon}</span>
+                        <p className="text-[26px] font-black" style={{ color: item.color }}>{item.value}</p>
+                        <p className="text-gray-400 text-sm mt-1">{item.label}</p>
+                    </div>
+                ))}
+            </div>
+
+            {/* Dashboard Features */}
+            <div className="max-w-5xl mx-auto w-full">
+                <h3 className="text-purple-300 text-[18px] font-bold mb-4">Real-Time Monitoring Features</h3>
+                <div className="grid grid-cols-2 gap-4">
+                    {[
+                        { icon: 'analytics', title: 'AI Routing Accuracy Metrics', desc: 'Track ML model performance in real-time' },
+                        { icon: 'trending_down', title: 'Escalation Prevention Rate', desc: 'Measure proactive intervention success' },
+                        { icon: 'verified', title: 'SLA Compliance Tracking', desc: 'Real-time SLA adherence monitoring' },
+                        { icon: 'timer', title: 'P50 / P95 / P99 Latency', desc: 'Full latency distribution monitoring' },
+                    ].map((item, i) => (
+                        <div key={i} className="bg-gray-800/40 rounded-xl p-4 border border-gray-700/30 flex items-start gap-3">
+                            <span className="material-icons text-purple-400 text-2xl mt-0.5">{item.icon}</span>
+                            <div>
+                                <h4 className="text-white font-semibold text-[15px]">{item.title}</h4>
+                                <p className="text-gray-400 text-[13px]">{item.desc}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    </div>
+);
+
+// ============================================================
+// Slide 9 — Patent Innovation
+// ============================================================
+const PatentSlide: React.FC = () => (
     <div className="w-full h-full bg-white">
         <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
-            <h1 className="text-[40px] font-bold text-white">White-Label Concept</h1>
+            <h1 className="text-white text-[38px] font-bold tracking-wide">Patent Innovation</h1>
         </div>
 
         <div className="flex h-[calc(100%-85px)]">
-            <div className="w-[38%] px-12 py-10 flex flex-col justify-center">
-                <div className="mb-8">
+            <div className="w-1/2 px-12 py-10 flex flex-col justify-center">
+                <div className="mb-6">
                     <div className="flex items-center gap-3 mb-3">
-                        <span className="material-icons text-[#6A1B9A] text-4xl">palette</span>
-                        <h2 className="text-[32px] font-bold text-[#6A1B9A]">Branding Freedom</h2>
+                        <span className="material-icons text-[#6A1B9A] text-4xl">workspace_premium</span>
+                        <h2 className="text-[28px] font-bold text-[#6A1B9A]">Adaptive AI Routing Architecture</h2>
                     </div>
                     <div className="w-24 h-1 bg-[#6A1B9A]" />
                 </div>
 
+                <p className="text-gray-700 text-[17px] leading-relaxed mb-6">
+                    MATIE's architecture represents a novel approach to intelligent ticket routing that is defensible as intellectual property.
+                </p>
+
                 <div className="space-y-4">
-                    {['Custom Branding per Company', 'Dedicated Domain', 'Consistent Brand Experience', 'Full Customization Control'].map((item, i) => (
-                        <div key={i} className="flex items-center gap-3 bg-purple-50 rounded-lg p-4">
-                            <span className="material-icons text-[#6A1B9A] text-2xl">check_circle</span>
-                            <span className="text-gray-800 text-[22px] font-medium">{item}</span>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            <div className="w-[62%] py-10 pr-12 flex flex-col justify-center">
-                <div className="grid grid-cols-2 gap-6 mb-6">
-                    {/* Company A */}
-                    <div className="bg-white rounded-xl shadow-lg border-2 border-[#E1BEE7] p-6">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#6A1B9A] to-[#7B1FA2] flex items-center justify-center">
-                                <span className="text-white font-bold text-[24px]">A</span>
-                            </div>
-                            <h3 className="text-[#6A1B9A] font-semibold text-[26px]">Company A</h3>
-                        </div>
-                        <div className="space-y-3">
-                            <div className="flex items-center gap-2">
-                                <span className="material-icons text-[#6A1B9A] text-xl">circle</span>
-                                <span className="text-gray-700 text-[20px]">Purple Theme</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="material-icons text-[#6A1B9A] text-xl">label</span>
-                                <span className="text-gray-700 text-[20px]">Logo A</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="material-icons text-[#6A1B9A] text-xl">language</span>
-                                <span className="text-gray-700 text-[18px]">domain-a.matie.app</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Company B */}
-                    <div className="bg-white rounded-xl shadow-lg border-2 border-[#E1BEE7] p-6">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#2196F3] to-[#1976D2] flex items-center justify-center">
-                                <span className="text-white font-bold text-[24px]">B</span>
-                            </div>
-                            <h3 className="text-[#2196F3] font-semibold text-[26px]">Company B</h3>
-                        </div>
-                        <div className="space-y-3">
-                            <div className="flex items-center gap-2">
-                                <span className="material-icons text-[#2196F3] text-xl">circle</span>
-                                <span className="text-gray-700 text-[20px]">Blue Theme</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="material-icons text-[#2196F3] text-xl">label</span>
-                                <span className="text-gray-700 text-[20px]">Logo B</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="material-icons text-[#2196F3] text-xl">language</span>
-                                <span className="text-gray-700 text-[18px]">domain-b.matie.app</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="h-[200px] rounded-2xl overflow-hidden shadow-xl border-4 border-[#E1BEE7] bg-gradient-to-r from-purple-100 via-blue-100 to-green-100 flex items-center justify-center">
-                    <div className="text-center">
-                        <p className="text-[#6A1B9A] text-2xl font-semibold">One Platform, Many Brands</p>
-                        <p className="text-gray-600 text-lg mt-2">Each company gets their own branded experience</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-);
-
-// Slide 7 - Platform Architecture
-const PlatformArchSlide: React.FC = () => (
-    <div className="w-full h-full bg-white">
-        <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
-            <h1 className="text-[40px] font-bold text-white">Platform Architecture</h1>
-        </div>
-        <div className="h-[calc(100%-85px)] flex items-center justify-center px-20">
-            <div className="flex flex-col gap-4 w-full max-w-4xl">
-                {[
-                    { name: 'Frontend', tech: 'React + TypeScript + Tailwind', color: '#c4b5fd', icon: 'web' },
-                    { name: 'Backend', tech: 'Node.js + Firebase Functions', color: '#a78bfa', icon: 'dns' },
-                    { name: 'Database', tech: 'Cloud Firestore', color: '#8b5cf6', icon: 'storage' },
-                    { name: 'AI Layer', tech: 'TensorFlow + OpenAI', color: '#7c3aed', icon: 'psychology' },
-                    { name: 'Cloud', tech: 'Vercel + Google Cloud Platform', color: '#6d28d9', icon: 'cloud' },
-                ].map((layer, i) => (
-                    <div key={i} className="flex items-center gap-4 p-6 rounded-xl text-white" style={{ backgroundColor: layer.color }}>
-                        <span className="material-icons text-4xl">{layer.icon}</span>
-                        <div>
-                            <h3 className="text-2xl font-bold">{layer.name}</h3>
-                            <p className="text-white/90">{layer.tech}</p>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </div>
-    </div>
-);
-
-// Slide 8 - User Roles
-const RolesSlide: React.FC = () => (
-    <div className="w-full h-full bg-white">
-        <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
-            <h1 className="text-[40px] font-bold text-white">User Roles & Permissions</h1>
-        </div>
-        <div className="h-[calc(100%-85px)] flex items-center justify-center px-16">
-            <div className="grid grid-cols-5 gap-6">
-                {[
-                    { name: 'Platform Admin', icon: 'admin_panel_settings', desc: 'Full system access', color: '#6d28d9' },
-                    { name: 'Company Admin', icon: 'business', desc: 'Manage organization', color: '#7c3aed' },
-                    { name: 'IT Manager', icon: 'settings', desc: 'Configure infrastructure', color: '#8b5cf6' },
-                    { name: 'Support Agent', icon: 'support_agent', desc: 'Handle tickets', color: '#a78bfa' },
-                    { name: 'Employee', icon: 'person', desc: 'Create tickets', color: '#c4b5fd' },
-                ].map((role, i) => (
-                    <div key={i} className="bg-white rounded-2xl shadow-xl p-6 text-center border-t-4" style={{ borderColor: role.color }}>
-                        <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: `${role.color}20` }}>
-                            <span className="material-icons text-3xl" style={{ color: role.color }}>{role.icon}</span>
-                        </div>
-                        <h3 className="font-semibold text-gray-800 text-lg">{role.name}</h3>
-                        <p className="text-sm text-gray-500 mt-1">{role.desc}</p>
-                    </div>
-                ))}
-            </div>
-        </div>
-    </div>
-);
-
-// Slide 9 - Ticket Workflow
-const WorkflowSlide: React.FC = () => (
-    <div className="w-full h-full bg-white">
-        <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
-            <h1 className="text-[40px] font-bold text-white">Employee Ticket Workflow</h1>
-        </div>
-        <div className="h-[calc(100%-85px)] flex items-center justify-center px-16">
-            <div className="flex items-center gap-6">
-                {[
-                    { step: '1', text: 'Login', icon: 'login' },
-                    { step: '2', text: 'Create Ticket', icon: 'add_circle' },
-                    { step: '3', text: 'Auto-Assign', icon: 'route' },
-                    { step: '4', text: 'Track Progress', icon: 'timeline' },
-                    { step: '5', text: 'Resolution', icon: 'check_circle' },
-                ].map((item, i) => (
-                    <React.Fragment key={i}>
-                        <div className="flex flex-col items-center">
-                            <div className="w-20 h-20 bg-gradient-to-br from-[#6A1B9A] to-[#7B1FA2] rounded-2xl flex items-center justify-center shadow-lg mb-4">
-                                <span className="material-icons text-white text-4xl">{item.icon}</span>
-                            </div>
-                            <span className="text-[#6A1B9A] font-semibold text-lg">{item.text}</span>
-                        </div>
-                        {i < 4 && <span className="material-icons text-[#6A1B9A] text-4xl">arrow_forward</span>}
-                    </React.Fragment>
-                ))}
-            </div>
-        </div>
-    </div>
-);
-
-// Slide 10 - Ticket Lifecycle
-const LifecycleSlide: React.FC = () => (
-    <div className="w-full h-full bg-white">
-        <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
-            <h1 className="text-[40px] font-bold text-white">Ticket Lifecycle Management</h1>
-        </div>
-        <div className="h-[calc(100%-85px)] flex items-center justify-center px-16">
-            <div className="flex items-center gap-4">
-                {[
-                    { name: 'Open', color: '#3b82f6' },
-                    { name: 'Assigned', color: '#f59e0b' },
-                    { name: 'In Progress', color: '#f97316' },
-                    { name: 'Resolved', color: '#22c55e' },
-                    { name: 'Closed', color: '#6b7280' },
-                ].map((status, i) => (
-                    <React.Fragment key={i}>
-                        <div className="px-8 py-6 rounded-xl text-white font-semibold text-xl shadow-lg" style={{ backgroundColor: status.color }}>
-                            {status.name}
-                        </div>
-                        {i < 4 && <span className="material-icons text-gray-400 text-3xl">arrow_forward</span>}
-                    </React.Fragment>
-                ))}
-            </div>
-        </div>
-    </div>
-);
-
-// Slide 11 - AI Features
-const AISlide: React.FC = () => (
-    <div className="w-full h-full bg-white">
-        <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
-            <h1 className="text-[40px] font-bold text-white">AI-Powered Features</h1>
-        </div>
-        <div className="h-[calc(100%-85px)] flex items-center justify-center px-16">
-            <div className="grid grid-cols-2 gap-8 max-w-4xl">
-                {[
-                    { icon: 'psychology', title: 'Auto Classification', desc: 'AI categorizes tickets by type and urgency automatically' },
-                    { icon: 'trending_up', title: 'Priority Prediction', desc: 'ML models predict ticket priority based on content' },
-                    { icon: 'smart_toy', title: 'Smart Chatbot', desc: '24/7 AI assistance for common queries and issues' },
-                    { icon: 'lightbulb', title: 'Response Suggestions', desc: 'AI-generated reply recommendations for agents' },
-                ].map((item, i) => (
-                    <div key={i} className="bg-gradient-to-br from-purple-50 to-white rounded-2xl p-8 shadow-lg border border-purple-100">
-                        <div className="w-16 h-16 bg-[#6A1B9A] rounded-xl flex items-center justify-center mb-4">
-                            <span className="material-icons text-white text-3xl">{item.icon}</span>
-                        </div>
-                        <h3 className="text-[#6A1B9A] font-bold text-2xl mb-2">{item.title}</h3>
-                        <p className="text-gray-600 text-lg">{item.desc}</p>
-                    </div>
-                ))}
-            </div>
-        </div>
-    </div>
-);
-
-// Slide 12 - Security
-const SecuritySlide: React.FC = () => (
-    <div className="w-full h-full bg-white">
-        <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
-            <h1 className="text-[40px] font-bold text-white">Security & Data Protection</h1>
-        </div>
-        <div className="h-[calc(100%-85px)] flex items-center justify-center px-16">
-            <div className="grid grid-cols-2 gap-8 max-w-4xl">
-                {[
-                    { icon: 'shield', title: 'Tenant Isolation', desc: 'Complete data separation between organizations' },
-                    { icon: 'vpn_key', title: 'Role-Based Access', desc: 'Granular permissions per user role' },
-                    { icon: 'lock', title: 'Encrypted Data', desc: 'AES-256 encryption at rest and in transit' },
-                    { icon: 'history', title: 'Audit Logs', desc: 'Complete activity tracking and compliance' },
-                ].map((item, i) => (
-                    <div key={i} className="bg-gradient-to-br from-purple-50 to-white rounded-2xl p-8 shadow-lg border border-purple-100">
-                        <div className="w-16 h-16 bg-[#6A1B9A] rounded-xl flex items-center justify-center mb-4">
-                            <span className="material-icons text-white text-3xl">{item.icon}</span>
-                        </div>
-                        <h3 className="text-[#6A1B9A] font-bold text-2xl mb-2">{item.title}</h3>
-                        <p className="text-gray-600 text-lg">{item.desc}</p>
-                    </div>
-                ))}
-            </div>
-        </div>
-    </div>
-);
-
-// Slide 13 - Analytics
-const AnalyticsSlide: React.FC = () => (
-    <div className="w-full h-full bg-white">
-        <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
-            <h1 className="text-[40px] font-bold text-white">Dashboards & Analytics</h1>
-        </div>
-        <div className="h-[calc(100%-85px)] flex items-center justify-center px-16">
-            <div className="w-full max-w-5xl">
-                <div className="grid grid-cols-4 gap-6 mb-8">
+                    <h3 className="text-[#6A1B9A] font-bold text-[18px]">Key Patent Claims</h3>
                     {[
-                        { label: 'Total Tickets', value: '1,234', icon: 'confirmation_number' },
-                        { label: 'Open Issues', value: '42', icon: 'pending' },
-                        { label: 'SLA Compliance', value: '98%', icon: 'verified' },
-                        { label: 'Avg Resolution', value: '4.2h', icon: 'schedule' },
+                        'MFIS weighted routing model',
+                        'Sigmoid-normalized decision engine',
+                        'Explainable AI routing trace',
+                        'Multi-tenant adaptive recalibration',
                     ].map((item, i) => (
-                        <div key={i} className="bg-white rounded-2xl shadow-lg p-6 text-center border-t-4 border-[#6A1B9A]">
-                            <span className="material-icons text-[#6A1B9A] text-4xl mb-2">{item.icon}</span>
-                            <p className="text-4xl font-bold text-[#6A1B9A]">{item.value}</p>
-                            <p className="text-gray-500 mt-2">{item.label}</p>
+                        <div key={i} className="flex items-center gap-3 bg-purple-50 rounded-lg p-4 border border-purple-200">
+                            <span className="material-icons text-[#6A1B9A] text-xl">gavel</span>
+                            <span className="text-gray-800 text-[16px] font-medium">{item}</span>
                         </div>
                     ))}
                 </div>
-                <div className="bg-purple-50 rounded-2xl p-8 text-center">
-                    <span className="material-icons text-[#6A1B9A] text-6xl mb-4">insights</span>
-                    <p className="text-[#6A1B9A] text-2xl font-semibold">Real-time KPIs & Performance Metrics</p>
-                </div>
             </div>
-        </div>
-    </div>
-);
 
-// Slide 14 - Tech Stack
-const TechStackSlide: React.FC = () => (
-    <div className="w-full h-full bg-white">
-        <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
-            <h1 className="text-[40px] font-bold text-white">Technology Stack</h1>
-        </div>
-        <div className="h-[calc(100%-85px)] flex items-center justify-center px-16">
-            <div className="grid grid-cols-5 gap-6">
-                {[
-                    { category: 'Frontend', tech: 'React + TypeScript', icon: 'web' },
-                    { category: 'Backend', tech: 'Node.js + Firebase', icon: 'dns' },
-                    { category: 'Database', tech: 'Cloud Firestore', icon: 'storage' },
-                    { category: 'AI/ML', tech: 'TensorFlow', icon: 'psychology' },
-                    { category: 'Cloud', tech: 'Vercel + GCP', icon: 'cloud' },
-                ].map((item, i) => (
-                    <div key={i} className="bg-purple-50 rounded-2xl p-6 text-center">
-                        <div className="w-16 h-16 bg-[#6A1B9A] rounded-full mx-auto mb-4 flex items-center justify-center">
-                            <span className="material-icons text-white text-3xl">{item.icon}</span>
-                        </div>
-                        <h3 className="text-[#6A1B9A] font-bold text-xl mb-1">{item.category}</h3>
-                        <p className="text-gray-600">{item.tech}</p>
-                    </div>
-                ))}
-            </div>
-        </div>
-    </div>
-);
-
-// Slide 15 - Advantages
-const AdvantagesSlide: React.FC = () => (
-    <div className="w-full h-full bg-white">
-        <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
-            <h1 className="text-[40px] font-bold text-white">Platform Advantages</h1>
-        </div>
-        <div className="h-[calc(100%-85px)] flex items-center justify-center px-16">
-            <div className="grid grid-cols-2 gap-4 max-w-4xl">
-                {[
-                    'Scalable Multi-Tenant Architecture',
-                    'Complete Brand Customization',
-                    'AI-Powered Automation',
-                    'Enterprise-Grade Security',
-                    'Real-Time Analytics',
-                    'Quick Deployment',
-                    'Cost-Effective Solution',
-                    '24/7 AI Assistance',
-                ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-3 bg-purple-50 rounded-xl p-5">
-                        <span className="material-icons text-[#6A1B9A] text-3xl">check_circle</span>
-                        <span className="text-gray-800 text-xl">{item}</span>
-                    </div>
-                ))}
-            </div>
-        </div>
-    </div>
-);
-
-// Slide 16 - Use Case
-const UseCaseSlide: React.FC = () => (
-    <div className="w-full h-full bg-white">
-        <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
-            <h1 className="text-[40px] font-bold text-white">Real-World Use Case</h1>
-        </div>
-        <div className="h-[calc(100%-85px)] flex items-center justify-center px-16">
-            <div className="text-center">
-                <div className="inline-flex items-center gap-4 bg-purple-50 rounded-2xl px-8 py-4 mb-8">
-                    <span className="material-icons text-[#6A1B9A] text-4xl">business</span>
-                    <span className="text-[#6A1B9A] text-3xl font-bold">TechCorp Inc.</span>
-                </div>
-                <div className="flex items-center gap-4 justify-center">
-                    {['Employee submits ticket', 'AI categorizes & routes', 'Agent assigned instantly', 'Resolution tracked', 'Employee notified'].map((step, i) => (
-                        <React.Fragment key={i}>
-                            <div className="bg-white rounded-xl shadow-lg p-4 border border-purple-200 w-40">
-                                <p className="text-[#6A1B9A] font-medium text-sm">{step}</p>
+            <div className="w-1/2 py-10 pr-12 flex items-center">
+                <div className="w-full rounded-2xl bg-gradient-to-br from-purple-900 to-indigo-900 p-8 shadow-2xl text-white">
+                    <h3 className="text-purple-200 text-[22px] font-bold mb-6 text-center">Enterprise Value</h3>
+                    
+                    <div className="space-y-6">
+                        <div className="bg-white/10 rounded-xl p-5 backdrop-blur-sm border border-white/20">
+                            <div className="flex items-center gap-3 mb-2">
+                                <span className="material-icons text-amber-300 text-2xl">shield</span>
+                                <h4 className="text-white font-bold text-[18px]">Defensible AI Infrastructure</h4>
                             </div>
-                            {i < 4 && <span className="material-icons text-[#6A1B9A] text-2xl">arrow_forward</span>}
-                        </React.Fragment>
-                    ))}
+                            <p className="text-purple-200 text-[14px] leading-relaxed">
+                                Novel algorithmic approach protected by patent claims, creating a strong competitive moat.
+                            </p>
+                        </div>
+
+                        <div className="bg-white/10 rounded-xl p-5 backdrop-blur-sm border border-white/20">
+                            <div className="flex items-center gap-3 mb-2">
+                                <span className="material-icons text-amber-300 text-2xl">precision_manufacturing</span>
+                                <h4 className="text-white font-bold text-[18px]">Enterprise-Grade Decision Engine</h4>
+                            </div>
+                            <p className="text-purple-200 text-[14px] leading-relaxed">
+                                Production-ready scoring engine with explainability, auditability, and compliance built-in.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 );
 
-// Slide 17 - Future
-const FutureSlide: React.FC = () => (
-    <div className="w-full h-full bg-white">
-        <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
-            <h1 className="text-[40px] font-bold text-white">Future Enhancements</h1>
-        </div>
-        <div className="h-[calc(100%-85px)] flex items-center justify-center px-16">
-            <div className="flex gap-8">
-                {[
-                    { phase: 'Phase 1', title: 'Mobile Apps', desc: 'iOS & Android support', icon: 'smartphone' },
-                    { phase: 'Phase 2', title: 'Integrations', desc: 'Slack, Teams, Email', icon: 'integration_instructions' },
-                    { phase: 'Phase 3', title: 'Advanced AI', desc: 'Predictive analytics', icon: 'psychology' },
-                ].map((item, i) => (
-                    <div key={i} className="bg-white rounded-2xl shadow-xl p-8 text-center w-72 border-t-4 border-[#6A1B9A]">
-                        <span className="text-sm text-[#6A1B9A] font-medium bg-purple-100 px-3 py-1 rounded-full">{item.phase}</span>
-                        <div className="w-20 h-20 bg-purple-100 rounded-full mx-auto my-6 flex items-center justify-center">
-                            <span className="material-icons text-[#6A1B9A] text-4xl">{item.icon}</span>
-                        </div>
-                        <h3 className="text-[#6A1B9A] font-bold text-2xl mb-2">{item.title}</h3>
-                        <p className="text-gray-600">{item.desc}</p>
-                    </div>
-                ))}
-            </div>
-        </div>
-    </div>
-);
-
-// Slide 18 - Conclusion
-const ConclusionSlide: React.FC = () => (
-    <div className="w-full h-full bg-gradient-to-br from-[#5e2b97] via-[#7b1fa2] to-[#6a1b9a] flex items-center justify-center">
-        <div className="text-center">
-            <h1 className="text-white text-6xl font-bold mb-10">Conclusion</h1>
-            <div className="flex flex-wrap justify-center gap-4 mb-10 max-w-4xl">
-                {['Centralized Enterprise Solution', 'Multi-Tenant & Secure', 'AI-Powered Automation', 'Fully Customizable White-Label', 'Production-Ready Platform'].map((item, i) => (
-                    <span key={i} className="bg-white/20 backdrop-blur rounded-full px-6 py-3 text-white text-lg">{item}</span>
-                ))}
-            </div>
-            <p className="text-white/90 text-2xl">Empowering enterprises with intelligent IT support</p>
-        </div>
-    </div>
-);
-
-// Slide 19 - Thank You
-const ThankYouSlide: React.FC = () => (
-    <div className="w-full h-full bg-gradient-to-br from-[#5e2b97] via-[#7b1fa2] to-[#6a1b9a] relative flex items-center justify-center">
+// ============================================================
+// Slide 10 — Impact & Future Vision
+// ============================================================
+const ImpactSlide: React.FC = () => (
+    <div className="w-full h-full bg-gradient-to-br from-[#5e2b97] via-[#7b1fa2] to-[#6a1b9a] relative flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0" style={{
             background: `radial-gradient(circle at 20% 30%, rgba(225,190,231,0.18), transparent 55%),
                    radial-gradient(circle at 80% 70%, rgba(255,255,255,0.12), transparent 60%)`
         }} />
-        <div className="relative z-10 text-center">
-            <h1 className="text-white text-8xl font-bold mb-6">Thank You</h1>
-            <p className="text-white/80 text-4xl mb-16">Questions?</p>
-            <div className="absolute bottom-10 inset-x-0">
-                <p className="text-white/85 text-lg tracking-wide">
-                    Presented by <span className="font-semibold">MetaMinds</span> ·
-                    <span className="font-light">CSE (Artificial Intelligence &amp; Machine Learning)</span>
+        <div className="absolute w-[520px] h-[520px] -top-60 -right-48 rounded-full bg-gradient-to-br from-[rgba(225,190,231,0.15)] to-[rgba(255,255,255,0.05)]" />
+        <div className="absolute w-[420px] h-[420px] -bottom-52 -left-40 rounded-full bg-gradient-to-br from-[rgba(225,190,231,0.15)] to-[rgba(255,255,255,0.05)]" />
+
+        <div className="relative z-10 text-center px-12 lg:px-24 max-w-5xl">
+            <h1 className="text-white text-[44px] font-bold mb-10">Impact & Future Vision</h1>
+
+            {/* Impact Metrics */}
+            <div className="grid grid-cols-4 gap-5 mb-12">
+                {[
+                    { value: '40%', label: 'Faster Resolution', icon: 'speed' },
+                    { value: '78%', label: 'Escalation Prevention', icon: 'trending_down' },
+                    { value: '94%', label: 'Routing Accuracy', icon: 'gps_fixed' },
+                    { value: '96%', label: 'SLA Compliance', icon: 'verified' },
+                ].map((item, i) => (
+                    <div key={i} className="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20">
+                        <span className="material-icons text-white/80 text-3xl mb-2">{item.icon}</span>
+                        <p className="text-white text-[32px] font-black">{item.value}</p>
+                        <p className="text-white/70 text-sm">{item.label}</p>
+                    </div>
+                ))}
+            </div>
+
+            {/* Future Roadmap */}
+            <h3 className="text-white/90 text-[20px] font-semibold mb-4">Future Roadmap</h3>
+            <div className="flex justify-center gap-4 mb-10">
+                {[
+                    'Enterprise Pilot Deployments',
+                    'Reinforcement Learning',
+                    'Cross-Platform AI Infrastructure',
+                ].map((item, i) => (
+                    <span key={i} className="bg-white/15 backdrop-blur rounded-full px-5 py-2 text-white text-sm border border-white/20">
+                        {item}
+                    </span>
+                ))}
+            </div>
+
+            <div className="mx-auto h-[2px] w-48 bg-gradient-to-r from-transparent via-white/50 to-transparent mb-6" />
+
+            <p className="text-white/90 text-[20px] font-light leading-relaxed italic">
+                "MATIE is not just a helpdesk tool —<br />
+                it is the <span className="font-bold">AI control plane</span> for enterprise IT operations."
+            </p>
+
+            <div className="absolute bottom-8 inset-x-0">
+                <p className="text-white/70 text-sm">
+                    <span className="font-semibold">MetaMinds</span> · CSE (AI & ML) · Thank You
                 </p>
             </div>
         </div>
     </div>
 );
 
+// ============================================================
 // All slides array
+// ============================================================
 const slideComponents = [
     TitleSlide,
     ProblemSlide,
     LimitationsSlide,
-    SolutionSlide,
+    IntroducingMATIESlide,
+    MFISSlide,
+    ExplainableAISlide,
     ArchitectureSlide,
-    WhiteLabelSlide,
-    PlatformArchSlide,
-    RolesSlide,
-    WorkflowSlide,
-    LifecycleSlide,
-    AISlide,
-    SecuritySlide,
-    AnalyticsSlide,
-    TechStackSlide,
-    AdvantagesSlide,
-    UseCaseSlide,
-    FutureSlide,
-    ConclusionSlide,
-    ThankYouSlide,
+    ObservabilitySlide,
+    PatentSlide,
+    ImpactSlide,
 ];
 
 const slideNames = [
-    'Title', 'Problem Statement', 'Existing Solutions', 'Proposed Solution',
-    'Multi-Tenant Architecture', 'White-Label Concept', 'Platform Architecture',
-    'User Roles', 'Ticket Workflow', 'Ticket Lifecycle', 'AI Features',
-    'Security', 'Analytics', 'Technology Stack', 'Advantages',
-    'Use Case', 'Future Enhancements', 'Conclusion', 'Thank You'
+    'Title',
+    'The Problem',
+    'Existing Limitations',
+    'Introducing MATIE',
+    'MFIS Algorithm',
+    'Explainable AI',
+    'System Architecture',
+    'Observability',
+    'Patent Innovation',
+    'Impact & Future',
 ];
 
-// Main component
+// ============================================================
+// Main Pitch Deck Component
+// ============================================================
 export const PitchPage: React.FC = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
