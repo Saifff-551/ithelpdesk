@@ -465,30 +465,30 @@ const ObservabilitySlide: React.FC = () => (
 );
 
 // ============================================================
-// Slide 9 — Patent Innovation
+// Slide 9 — Innovation & IP Potential
 // ============================================================
 const PatentSlide: React.FC = () => (
     <div className="w-full h-full bg-white">
         <div className="h-[85px] bg-gradient-to-r from-[#6A1B9A] to-[#7B1FA2] flex items-center px-16">
-            <h1 className="text-white text-[38px] font-bold tracking-wide">Patent Innovation</h1>
+            <h1 className="text-white text-[38px] font-bold tracking-wide">Innovation & IP Potential</h1>
         </div>
 
         <div className="flex h-[calc(100%-85px)]">
             <div className="w-1/2 px-12 py-10 flex flex-col justify-center">
                 <div className="mb-6">
                     <div className="flex items-center gap-3 mb-3">
-                        <span className="material-icons text-[#6A1B9A] text-4xl">workspace_premium</span>
+                        <span className="material-icons text-[#6A1B9A] text-4xl">lightbulb</span>
                         <h2 className="text-[28px] font-bold text-[#6A1B9A]">Adaptive AI Routing Architecture</h2>
                     </div>
                     <div className="w-24 h-1 bg-[#6A1B9A]" />
                 </div>
 
                 <p className="text-gray-700 text-[17px] leading-relaxed mb-6">
-                    MATIE's architecture represents a novel approach to intelligent ticket routing that is defensible as intellectual property.
+                    MATIE's architecture introduces novel approaches to intelligent ticket routing with strong potential for intellectual property protection.
                 </p>
 
                 <div className="space-y-4">
-                    <h3 className="text-[#6A1B9A] font-bold text-[18px]">Key Patent Claims</h3>
+                    <h3 className="text-[#6A1B9A] font-bold text-[18px]">Patentable Innovations</h3>
                     {[
                         'MFIS weighted routing model',
                         'Sigmoid-normalized decision engine',
@@ -496,7 +496,7 @@ const PatentSlide: React.FC = () => (
                         'Multi-tenant adaptive recalibration',
                     ].map((item, i) => (
                         <div key={i} className="flex items-center gap-3 bg-purple-50 rounded-lg p-4 border border-purple-200">
-                            <span className="material-icons text-[#6A1B9A] text-xl">gavel</span>
+                            <span className="material-icons text-[#6A1B9A] text-xl">emoji_objects</span>
                             <span className="text-gray-800 text-[16px] font-medium">{item}</span>
                         </div>
                     ))}
@@ -514,7 +514,7 @@ const PatentSlide: React.FC = () => (
                                 <h4 className="text-white font-bold text-[18px]">Defensible AI Infrastructure</h4>
                             </div>
                             <p className="text-purple-200 text-[14px] leading-relaxed">
-                                Novel algorithmic approach protected by patent claims, creating a strong competitive moat.
+                                Novel algorithmic approach with strong IP potential, creating a competitive moat ready for future patent filing.
                             </p>
                         </div>
 
@@ -620,7 +620,7 @@ const slideNames = [
     'Explainable AI',
     'System Architecture',
     'Observability',
-    'Patent Innovation',
+    'Innovation & IP',
     'Impact & Future',
 ];
 
