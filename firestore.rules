@@ -71,7 +71,9 @@ service cloud.firestore {
       
       // Users can read profiles from their own tenant, or platform admin can read all
       allow read: if isAuthenticated() && 
-                     (resource.data.tenant_id == getUserProfile().tenant_id || isPlatformAdmin());
+                     (isOwner(userId) || 
+                      resource.data.tenant_id == getUserProfile().tenant_id || 
+                      isPlatformAdmin());
       
       // Users can update their own profile, admins can update any user in their tenant
       allow update: if isAuthenticated() &&
