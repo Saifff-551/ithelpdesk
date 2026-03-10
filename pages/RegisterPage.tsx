@@ -225,23 +225,23 @@ export const RegisterPage: React.FC = () => {
       </div>
 
       {/* Right Side - Form */}
-      <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-32 bg-white dark:bg-background-dark w-full lg:w-[48%] xl:w-[45%] relative overflow-y-auto max-h-screen shadow-2xl shadow-black/10 z-20">
+      <div className="flex flex-1 flex-col justify-center px-4 py-8 sm:px-6 lg:flex-none lg:px-20 xl:px-32 bg-white dark:bg-background-dark w-full lg:w-[48%] xl:w-[45%] relative overflow-y-auto max-h-screen shadow-2xl shadow-black/10 z-20">
         <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary via-purple-500 to-primary-hover lg:hidden"></div>
 
-        <div className="mx-auto w-full max-w-sm lg:w-[28rem] py-8">
+        <div className="mx-auto w-full max-w-sm lg:w-[36rem] py-6">
           {/* Header */}
-          <div className="flex flex-col items-center text-center lg:items-start lg:text-left gap-6 mb-10">
+          <div className="flex flex-col items-center text-center lg:items-start lg:text-left gap-5 mb-8">
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-              <div className="relative h-16 w-16 rounded-2xl bg-white dark:bg-surface-dark flex items-center justify-center shadow-sm border border-slate-100 dark:border-white/10">
-                <Building2 className="h-8 w-8 text-primary" />
+              <div className="relative h-14 w-14 rounded-2xl bg-white dark:bg-surface-dark flex items-center justify-center shadow-sm border border-slate-100 dark:border-white/10">
+                <Building2 className="h-7 w-7 text-primary" />
               </div>
             </div>
             <div>
               <h2 className="text-3xl font-bold leading-9 tracking-tight text-slate-900 dark:text-white">
                 Register Your Organization
               </h2>
-              <p className="mt-2 text-base leading-6 text-slate-500 dark:text-slate-400">
+              <p className="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">
                 Deploy your AI routing infrastructure in minutes. Get your own branded control plane.
               </p>
             </div>
@@ -249,150 +249,159 @@ export const RegisterPage: React.FC = () => {
 
           {/* Form */}
           <div>
-            <form onSubmit={handleRegister} className="space-y-5">
-              {/* Company Name */}
-              <div>
-                <label htmlFor="company_name" className="block text-sm font-semibold leading-6 text-slate-700 dark:text-slate-300 ml-1">
-                  Company Name
-                </label>
-                <div className="mt-2 relative">
-                  <input
-                    id="company_name"
-                    name="company_name"
-                    type="text"
-                    autoComplete="organization"
-                    required
-                    value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
-                    placeholder="e.g. Acme Industries"
-                    className="block w-full rounded-xl border-0 py-3.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-white/10 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary dark:bg-white/5 dark:text-white sm:text-sm sm:leading-6 pl-4 transition-all duration-200 ease-in-out hover:ring-slate-300 dark:hover:ring-white/20 bg-slate-50/30"
-                  />
-                </div>
-              </div>
-
-              {/* Subdomain */}
-              <div>
-                <label htmlFor="subdomain" className="block text-sm font-semibold leading-6 text-slate-700 dark:text-slate-300 ml-1">
-                  Your Platform URL
-                </label>
-                <div className="mt-2 relative">
-                  <div className="flex rounded-xl shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-white/10 focus-within:ring-2 focus-within:ring-primary bg-slate-50/30 dark:bg-white/5">
+            <form onSubmit={handleRegister} className="space-y-4">
+              {/* Core Details Grid */}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {/* Company Name */}
+                <div>
+                  <label htmlFor="company_name" className="block text-sm font-semibold leading-6 text-slate-700 dark:text-slate-300 ml-1">
+                    Company Name
+                  </label>
+                  <div className="mt-1 relative">
                     <input
-                      id="subdomain"
-                      name="subdomain"
+                      id="company_name"
+                      name="company_name"
                       type="text"
+                      autoComplete="organization"
                       required
-                      value={subdomain}
-                      onChange={(e) => setSubdomain(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
-                      placeholder="yourcompany"
-                      className="block w-full min-w-0 flex-1 rounded-l-xl border-0 bg-transparent py-3.5 pl-4 text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-0 sm:text-sm sm:leading-6"
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      placeholder="e.g. Acme Industries"
+                      className="block w-full rounded-xl border-0 py-2.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-white/10 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary dark:bg-white/5 dark:text-white sm:text-sm sm:leading-6 pl-4 transition-all duration-200 ease-in-out hover:ring-slate-300 dark:hover:ring-white/20 bg-slate-50/30"
                     />
-                    <span className="flex select-none items-center pr-4 text-slate-500 sm:text-sm">
-                      .ithelpdesk.vercel.app
-                    </span>
-                    <span className="flex items-center pr-3">
-                      {getSubdomainIcon()}
-                    </span>
-                  </div>
-                  {getSubdomainMessage() && (
-                    <p className="mt-2 text-sm ml-1">{getSubdomainMessage()}</p>
-                  )}
-                </div>
-              </div>
-
-              {/* Company Website URL */}
-              <div>
-                <label htmlFor="company_url" className="block text-sm font-semibold leading-6 text-slate-700 dark:text-slate-300 ml-1">
-                  Company Website <span className="text-slate-400 font-normal">(optional)</span>
-                </label>
-                <div className="mt-2 relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Globe className="h-5 w-5 text-slate-400" />
-                  </div>
-                  <input
-                    id="company_url"
-                    name="company_url"
-                    type="url"
-                    value={companyUrl}
-                    onChange={(e) => setCompanyUrl(e.target.value)}
-                    placeholder="https://www.yourcompany.com"
-                    className="block w-full rounded-xl border-0 py-3.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-white/10 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary dark:bg-white/5 dark:text-white sm:text-sm sm:leading-6 pl-12 transition-all duration-200 ease-in-out hover:ring-slate-300 dark:hover:ring-white/20 bg-slate-50/30"
-                  />
-                </div>
-                <p className="mt-1.5 text-xs text-slate-500 ml-1">
-                  🤖 AI will use this to customize your control plane branding automatically
-                </p>
-              </div>
-
-              {/* Admin Name */}
-              <div>
-                <label htmlFor="full_name" className="block text-sm font-semibold leading-6 text-slate-700 dark:text-slate-300 ml-1">
-                  Administrator Name
-                </label>
-                <div className="mt-2 relative">
-                  <input
-                    id="full_name"
-                    name="full_name"
-                    type="text"
-                    autoComplete="name"
-                    required
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder="John Doe"
-                    className="block w-full rounded-xl border-0 py-3.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-white/10 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary dark:bg-white/5 dark:text-white sm:text-sm sm:leading-6 pl-4 transition-all duration-200 hover:ring-slate-300 dark:hover:ring-white/20 bg-slate-50/30"
-                  />
-                </div>
-              </div>
-
-              {/* Administrator Email */}
-              <div>
-                <label htmlFor="email" className="block text-sm font-semibold leading-6 text-slate-700 dark:text-slate-300 ml-1">
-                  Administrator Email
-                </label>
-                <div className="mt-2 relative">
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="admin@company.com"
-                    className="block w-full rounded-xl border-0 py-3.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-white/10 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary dark:bg-white/5 dark:text-white sm:text-sm sm:leading-6 pl-4 pr-10 transition-all duration-200 hover:ring-slate-300 dark:hover:ring-white/20 bg-slate-50/30"
-                  />
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-slate-400">
-                    <Mail className="h-5 w-5" />
                   </div>
                 </div>
+
+                {/* Company Website URL */}
+                <div>
+                  <label htmlFor="company_url" className="block text-sm font-semibold leading-6 text-slate-700 dark:text-slate-300 ml-1">
+                    Company Website <span className="text-slate-400 font-normal">(optional)</span>
+                  </label>
+                  <div className="mt-1 relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Globe className="h-5 w-5 text-slate-400" />
+                    </div>
+                    <input
+                      id="company_url"
+                      name="company_url"
+                      type="url"
+                      value={companyUrl}
+                      onChange={(e) => setCompanyUrl(e.target.value)}
+                      placeholder="https://www.yourcompany.com"
+                      className="block w-full rounded-xl border-0 py-2.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-white/10 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary dark:bg-white/5 dark:text-white sm:text-sm sm:leading-6 pl-10 transition-all duration-200 ease-in-out hover:ring-slate-300 dark:hover:ring-white/20 bg-slate-50/30"
+                    />
+                  </div>
+                  <p className="mt-1 text-xs text-slate-500 ml-1">
+                    🤖 AI uses this to customize branding
+                  </p>
+                </div>
               </div>
 
-              {/* Contact Phone */}
-              <div>
-                <label htmlFor="phone" className="block text-sm font-semibold leading-6 text-slate-700 dark:text-slate-300 ml-1">
-                  Contact Phone <span className="text-slate-400 font-normal">(optional)</span>
-                </label>
-                <div className="mt-2 relative">
-                  <input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    autoComplete="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+1 (555) 000-0000"
-                    className="block w-full rounded-xl border-0 py-3.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-white/10 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary dark:bg-white/5 dark:text-white sm:text-sm sm:leading-6 pl-4 transition-all duration-200 hover:ring-slate-300 dark:hover:ring-white/20 bg-slate-50/30"
-                  />
+              {/* Subdomain & Contact Grid */}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {/* Subdomain */}
+                <div>
+                  <label htmlFor="subdomain" className="block text-sm font-semibold leading-6 text-slate-700 dark:text-slate-300 ml-1">
+                    Your Platform URL
+                  </label>
+                  <div className="mt-1 relative">
+                    <div className="flex rounded-xl shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-white/10 focus-within:ring-2 focus-within:ring-primary bg-slate-50/30 dark:bg-white/5">
+                      <input
+                        id="subdomain"
+                        name="subdomain"
+                        type="text"
+                        required
+                        value={subdomain}
+                        onChange={(e) => setSubdomain(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
+                        placeholder="yourcompany"
+                        className="block w-full min-w-0 flex-1 rounded-l-xl border-0 bg-transparent py-2.5 pl-4 text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-0 sm:text-sm sm:leading-6"
+                      />
+                      <span className="flex select-none items-center pr-2 text-slate-500 text-sm">
+                        .ithelpdesk.app
+                      </span>
+                      <span className="flex items-center pr-3">
+                        {getSubdomainIcon()}
+                      </span>
+                    </div>
+                    {getSubdomainMessage() && (
+                      <p className="mt-1 text-xs ml-1">{getSubdomainMessage()}</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Contact Phone */}
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-semibold leading-6 text-slate-700 dark:text-slate-300 ml-1">
+                    Contact Phone <span className="text-slate-400 font-normal">(optional)</span>
+                  </label>
+                  <div className="mt-1 relative">
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      autoComplete="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+1 (555) 000-0000"
+                      className="block w-full rounded-xl border-0 py-2.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-white/10 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary dark:bg-white/5 dark:text-white sm:text-sm sm:leading-6 pl-4 transition-all duration-200 hover:ring-slate-300 dark:hover:ring-white/20 bg-slate-50/30"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Admin Grid */}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {/* Admin Name */}
+                <div>
+                  <label htmlFor="full_name" className="block text-sm font-semibold leading-6 text-slate-700 dark:text-slate-300 ml-1">
+                    Administrator Name
+                  </label>
+                  <div className="mt-1 relative">
+                    <input
+                      id="full_name"
+                      name="full_name"
+                      type="text"
+                      autoComplete="name"
+                      required
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="John Doe"
+                      className="block w-full rounded-xl border-0 py-2.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-white/10 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary dark:bg-white/5 dark:text-white sm:text-sm sm:leading-6 pl-4 transition-all duration-200 hover:ring-slate-300 dark:hover:ring-white/20 bg-slate-50/30"
+                    />
+                  </div>
+                </div>
+
+                {/* Administrator Email */}
+                <div>
+                  <label htmlFor="email" className="block text-sm font-semibold leading-6 text-slate-700 dark:text-slate-300 ml-1">
+                    Administrator Email
+                  </label>
+                  <div className="mt-1 relative">
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="admin@company.com"
+                      className="block w-full rounded-xl border-0 py-2.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-white/10 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary dark:bg-white/5 dark:text-white sm:text-sm sm:leading-6 pl-4 pr-10 transition-all duration-200 hover:ring-slate-300 dark:hover:ring-white/20 bg-slate-50/30"
+                    />
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-slate-400">
+                      <Mail className="h-5 w-5" />
+                    </div>
+                  </div>
                 </div>
               </div>
 
               {/* Password Grid */}
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label htmlFor="password" className="block text-sm font-semibold leading-6 text-slate-700 dark:text-slate-300 ml-1">
                     Password
                   </label>
-                  <div className="mt-2 relative rounded-xl shadow-sm">
+                  <div className="mt-1 relative rounded-xl shadow-sm">
                     <input
                       id="password"
                       name="password"
@@ -402,7 +411,7 @@ export const RegisterPage: React.FC = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="block w-full rounded-xl border-0 py-3.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-white/10 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary dark:bg-white/5 dark:text-white sm:text-sm sm:leading-6 pl-4 transition-all duration-200 hover:ring-slate-300 dark:hover:ring-white/20 bg-slate-50/30"
+                      className="block w-full rounded-xl border-0 py-2.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-white/10 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary dark:bg-white/5 dark:text-white sm:text-sm sm:leading-6 pl-4 transition-all duration-200 hover:ring-slate-300 dark:hover:ring-white/20 bg-slate-50/30"
                     />
                   </div>
                 </div>
@@ -410,7 +419,7 @@ export const RegisterPage: React.FC = () => {
                   <label htmlFor="password_confirmation" className="block text-sm font-semibold leading-6 text-slate-700 dark:text-slate-300 ml-1">
                     Confirm
                   </label>
-                  <div className="mt-2 relative rounded-xl shadow-sm">
+                  <div className="mt-1 relative rounded-xl shadow-sm">
                     <input
                       id="password_confirmation"
                       name="password_confirmation"
@@ -420,7 +429,7 @@ export const RegisterPage: React.FC = () => {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="block w-full rounded-xl border-0 py-3.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-white/10 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary dark:bg-white/5 dark:text-white sm:text-sm sm:leading-6 pl-4 transition-all duration-200 hover:ring-slate-300 dark:hover:ring-white/20 bg-slate-50/30"
+                      className="block w-full rounded-xl border-0 py-2.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-white/10 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary dark:bg-white/5 dark:text-white sm:text-sm sm:leading-6 pl-4 transition-all duration-200 hover:ring-slate-300 dark:hover:ring-white/20 bg-slate-50/30"
                     />
                   </div>
                 </div>
