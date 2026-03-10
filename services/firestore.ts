@@ -20,7 +20,9 @@ import type {
     SLA,
     Invitation,
     TenantSettings,
-    RoleId
+    RoleId,
+    AuditLog,
+    AIDecisionLog
 } from '../types';
 import { DEFAULT_TENANT_SETTINGS, DEFAULT_SLAS } from '../types';
 
@@ -393,6 +395,54 @@ export const deleteDocument = async (collectionName: string, docId: string) => {
         return { success: true };
     } catch (error) {
         console.error(`Error deleting document from ${collectionName}:`, error);
+        throw error;
+    }
+};
+
+// ============================================
+// MATIE AI & AUDIT LOG OPERATIONS
+// ============================================
+
+/**
+ * Creates an immutable AI decision log for explainability.
+ */
+export const createAIDecisionLog = async (
+    logData: Omit<AIDecisionLog, 'id' | 'timestamp'>
+): Promise<AIDecisionLog> => {
+    try {
+        const docRef = await addDoc(collection(db, 'ai_decision_logs'), {
+            ...logData,
+            timestamp: serverTimestamp(),
+        });
+        return {
+            id: docRef.id,
+            ...logData,
+            timestamp: timestampToISO(Timestamp.now()), // Approximate for immediate return
+        };
+    } catch (error) {
+        console.error('Error creating AI decision log:', error);
+        throw error;
+    }
+};
+
+/**
+ * Creates an immutable audit log for system and lifecycle events.
+ */
+export const createAuditLog = async (
+    logData: Omit<AuditLog, 'id' | 'timestamp'>
+): Promise<AuditLog> => {
+    try {
+        const docRef = await addDoc(collection(db, 'audit_logs'), {
+            ...logData,
+            timestamp: serverTimestamp(),
+        });
+        return {
+            id: docRef.id,
+            ...logData,
+            timestamp: timestampToISO(Timestamp.now()),
+        };
+    } catch (error) {
+        console.error('Error creating audit log:', error);
         throw error;
     }
 };

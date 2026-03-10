@@ -146,6 +146,9 @@ export interface Ticket {
   };
   ai_confidence?: number;
   audit_trace_id?: string;
+  sentiment_score?: number;
+  escalation_probability?: number;
+  routing_status?: 'pending' | 'in_progress' | 'completed' | 'failed';
 }
 
 export interface TicketComment {
@@ -178,4 +181,60 @@ export interface SLA {
   resolution_time_hours: number;
   is_active: boolean;
   created_at?: string;
+}
+
+export interface AIDecisionLog {
+  id: string;
+  tenant_id: string;
+  ticket_id: string;
+  timestamp: string;
+  
+  scoring_factors: {
+    mfis_score: number;
+    expertise_match: number;
+    sentiment_score: number;
+    workload_index: number;
+    sla_urgency: number;
+    escalation_probability: number;
+  };
+  weights_used: {
+    expertise: number;
+    workload: number;
+    urgency: number;
+    sentiment: number;
+  };
+  
+  selected_agent_id?: string;
+  final_score: number;
+  sigmoid_normalized_score: number;
+  
+  alternative_agents?: Array<{
+    agent_id: string;
+    score: number;
+  }>;
+}
+
+export interface AuditLog {
+  id: string;
+  tenant_id: string;
+  actor_id: string;
+  action: string;
+  resource_type: string;
+  resource_id: string;
+  metadata: string;
+  timestamp: string;
+}
+
+export interface SystemMetric {
+  id: string;
+  tenant_id: string;
+  date: string;
+  tickets_created: number;
+  tickets_resolved: number;
+  avg_resolution_time_minutes: number;
+  p50_latency_ms: number;
+  p95_latency_ms: number;
+  p99_latency_ms: number;
+  routing_accuracy: number;
+  escalation_prevention_rate: number;
 }

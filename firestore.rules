@@ -220,6 +220,23 @@ service cloud.firestore {
     }
     
     // ============================================
+    // AI DECISION LOGS 
+    // ============================================
+    match /ai_decision_logs/{logId} {
+      // Read: admins only
+      allow read: if isAuthenticated() && 
+                     resource.data.tenantId == getUserProfile().tenant_id &&
+                     isAdmin();
+      
+      // Create: AI Workers or Support staff 
+      allow create: if isAuthenticated() && 
+                       request.resource.data.tenantId == getUserProfile().tenant_id &&
+                       isSupportStaff();
+      
+      allow update, delete: if false;
+    }
+    
+    // ============================================
     // MATIE ESCALATION PREDICTIONS (Audit Trail)
     // ============================================
     match /matie_escalation_predictions/{predictionId} {
@@ -286,6 +303,23 @@ service cloud.firestore {
       // Immutable — no updates or deletes
       allow update, delete: if false;
     }
+
+    // ============================================
+    // AUDIT LOGS
+    // ============================================
+    match /audit_logs/{auditId} {
+      // Read: admins
+      allow read: if isAuthenticated() && 
+                     resource.data.tenantId == getUserProfile().tenant_id &&
+                     isAdmin();
+                     
+      // Create: support staff or system
+      allow create: if isAuthenticated() && 
+                       request.resource.data.tenantId == getUserProfile().tenant_id &&
+                       isSupportStaff();
+                       
+      allow update, delete: if false;
+    }
     
     // ============================================
     // AI METRICS (Observability)
@@ -311,6 +345,20 @@ service cloud.firestore {
                          isSupportStaff();
         allow update, delete: if false;
       }
+    }
+
+    // ============================================
+    // SYSTEM METRICS (Observability)
+    // ============================================
+    match /system_metrics/{metricId} {
+      allow read: if isAuthenticated() && 
+                     resource.data.tenantId == getUserProfile().tenant_id &&
+                     isAdmin();
+                     
+      // Normally populated by backend functions
+      allow write: if isAuthenticated() && 
+                      request.resource.data.tenantId == getUserProfile().tenant_id &&
+                      isAdmin();
     }
     
     // ============================================

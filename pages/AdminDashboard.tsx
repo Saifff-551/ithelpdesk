@@ -18,9 +18,12 @@ import {
     Loader2,
     Calendar,
     User,
-    BarChart3,
     Activity,
     Zap,
+    Globe,
+    ExternalLink,
+    Building2,
+    Shield
 } from 'lucide-react';
 
 // Stat Card Component
@@ -216,6 +219,12 @@ export const AdminDashboard: React.FC = () => {
             .slice(0, 5);
     }, [tickets, users]);
 
+    const tenantUrl = useMemo(() => {
+        if (!tenant) return '';
+        if (tenant.custom_domain) return `https://${tenant.custom_domain}`;
+        return `https://${tenant.subdomain}.matie.cloud`; // Fallback domain format based on specs
+    }, [tenant]);
+
     if (loading) {
         return (
             <div className="flex items-center justify-center h-96">
@@ -226,25 +235,86 @@ export const AdminDashboard: React.FC = () => {
 
     return (
         <div className="space-y-8">
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl font-mono font-bold text-gray-100 flex items-center gap-3">
-                        <Zap className="h-6 w-6 text-primary drop-shadow-[var(--panel-glow)]" />
-                        Welcome back, {profile?.full_name?.split(' ')[0]}!
-                    </h1>
-                    <p className="text-gray-400 mt-2 font-mono text-sm max-w-xl">
-                        Tenant Active: <strong className="text-gray-200">{tenant?.name}</strong> • Live Infrastructure Observations & Active Workloads
-                    </p>
+            {/* Enterprise Company Header / Hero */}
+            <div className="relative overflow-hidden rounded-2xl bg-surface-1 border border-border-default shadow-card">
+                {/* Abstract Background Effect */}
+                <div 
+                    className="absolute inset-0 opacity-10 pointer-events-none" 
+                    style={{ 
+                        background: `radial-gradient(circle at right top, ${primaryColor}, transparent 50%)`,
+                        mixBlendMode: 'plus-lighter'
+                    }} 
+                />
+                
+                <div className="p-8 relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                    <div className="flex items-center gap-6">
+                        {/* Company Logo or Fallback */}
+                        <div 
+                            className="w-20 h-20 rounded-2xl flex items-center justify-center text-3xl font-bold text-white shadow-lg shrink-0 border-2 border-surface-2 bg-cover bg-center"
+                            style={{ 
+                                backgroundColor: tenant?.logo_url ? 'transparent' : primaryColor,
+                                backgroundImage: tenant?.logo_url ? `url(${tenant.logo_url})` : 'none',
+                                borderColor: primaryColor + '40'
+                            }}
+                        >
+                            {!tenant?.logo_url && (tenant?.name ? tenant.name.charAt(0).toUpperCase() : <Building2 />)}
+                        </div>
+                        
+                        <div>
+                            <div className="flex items-center gap-3">
+                                <h1 className="text-3xl font-bold text-gray-100 dark:text-white tracking-tight">
+                                    {tenant?.name || 'Company Name'}
+                                </h1>
+                                <span className="px-2.5 py-1 bg-green-900/20 text-green-400 border border-green-500/30 text-[10px] uppercase tracking-wider font-bold rounded flex items-center gap-1.5">
+                                    <Shield className="w-3 h-3" />
+                                    Verified Enterprise
+                                </span>
+                            </div>
+                            
+                            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-3 text-sm text-gray-400 font-mono">
+                                {tenant?.website_url && (
+                                    <div className="flex items-center gap-1.5 hover:text-white transition-colors">
+                                        <Globe className="w-4 h-4" />
+                                        <a href={tenant.website_url.startsWith('http') ? tenant.website_url : `https://${tenant.website_url}`} target="_blank" rel="noopener noreferrer">
+                                            {tenant.website_url.replace(/^https?:\/\//, '')}
+                                        </a>
+                                    </div>
+                                )}
+                                <div className="flex items-center gap-1.5 group cursor-pointer" onClick={() => window.open(tenantUrl, '_blank')}>
+                                    <ExternalLink className="w-4 h-4" />
+                                    <span className="text-gray-300 group-hover:text-primary transition-colors underline-offset-4 decoration-primary/30 group-hover:underline">
+                                        Helpdesk Portal: {tenantUrl}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex gap-4 self-end md:self-auto shrink-0 bg-surface-2 p-4 rounded-xl border border-border-strong w-full md:w-auto">
+                        <div className="flex flex-col border-r border-border-strong pr-6">
+                            <span className="text-[10px] uppercase font-mono font-bold text-gray-500 mb-1">Total Employees</span>
+                            <div className="flex items-baseline gap-2">
+                                <Users className="w-5 h-5" style={{ color: primaryColor }} />
+                                <span className="text-2xl font-bold text-gray-100">{users.length}</span>
+                            </div>
+                        </div>
+                        <div className="flex flex-col pl-2">
+                            <span className="text-[10px] uppercase font-mono font-bold text-gray-500 mb-1">Support Agents</span>
+                            <div className="flex items-baseline gap-2">
+                                <Zap className="w-5 h-5 text-yellow-500" />
+                                <span className="text-2xl font-bold text-gray-100">{supportAgents}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <Calendar className="w-4 h-4" />
-                    {new Date().toLocaleDateString('en-US', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    })}
+                
+                {/* Slim Welcome Bar */}
+                <div className="bg-surface-2/80 border-t border-border-strong px-8 py-3 flex justify-between items-center text-xs font-mono text-gray-400 backdrop-blur-md">
+                    <p>Welcome back, <strong className="text-gray-200">{profile?.full_name}</strong> ({profile?.role_id.replace('_', ' ')})</p>
+                    <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-status-operational animate-pulse"></span>
+                        Metrics Live: {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                    </div>
                 </div>
             </div>
 
@@ -422,33 +492,40 @@ export const AdminDashboard: React.FC = () => {
 
                 {/* Sidebar */}
                 <div className="space-y-6">
-                    {/* Team Stats */}
-                    <div className="bg-surface-1 rounded-xl shadow-card border border-border-default p-5">
-                        <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2 mb-4">
-                            <Users className="w-5 h-5" style={{ color: primaryColor }} />
-                            Team Overview
-                        </h3>
-                        <div className="space-y-4">
-                            <div className="flex items-center justify-between">
-                                <span className="text-gray-500">Total Members</span>
-                                <span className="font-semibold text-gray-900 dark:text-white">{users.length}</span>
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <span className="text-gray-500">Active Users</span>
-                                <span className="font-semibold text-green-600">{activeUsers}</span>
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <span className="text-gray-500">Support Staff</span>
-                                <span className="font-semibold" style={{ color: primaryColor }}>{supportAgents}</span>
-                            </div>
+                    {/* Quick Actions */}
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.12)] border border-gray-200 dark:border-gray-700 p-5 overflow-hidden relative">
+                        <div className="absolute -right-10 -top-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+                        <h3 className="text-sm font-bold text-gray-200 uppercase tracking-wider mb-4">Enterprise Controls</h3>
+                        <div className="space-y-2">
+                            <button
+                                onClick={() => navigate('/dashboard/users')}
+                                className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-surface-3 border border-transparent hover:border-border-strong transition-all duration-fast text-left group"
+                            >
+                                <Users className="w-4 h-4 text-gray-400 group-hover:text-primary transition-colors" />
+                                <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">Manage Employees & Users</span>
+                            </button>
+                            <button
+                                onClick={() => navigate('/dashboard/tickets')}
+                                className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-surface-3 border border-transparent hover:border-border-strong transition-all duration-fast text-left group"
+                            >
+                                <TicketIcon className="w-4 h-4 text-gray-400 group-hover:text-primary transition-colors" />
+                                <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">Helpdesk Workloads</span>
+                            </button>
+                            <button
+                                onClick={() => navigate('/dashboard/slas')}
+                                className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-surface-3 border border-transparent hover:border-border-strong transition-all duration-fast text-left group"
+                            >
+                                <Clock className="w-4 h-4 text-gray-400 group-hover:text-primary transition-colors" />
+                                <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">Configure SLA Engine</span>
+                            </button>
+                            <button
+                                onClick={() => navigate('/dashboard/branding')}
+                                className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-surface-3 border border-transparent hover:border-border-strong transition-all duration-fast text-left group"
+                            >
+                                <Building2 className="w-4 h-4 text-gray-400 group-hover:text-primary transition-colors" />
+                                <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">Tenant Profile & Branding</span>
+                            </button>
                         </div>
-                        <button
-                            onClick={() => navigate('/dashboard/users')}
-                            className="w-full mt-4 py-2 text-sm font-medium rounded-lg border transition-colors"
-                            style={{ borderColor: primaryColor, color: primaryColor }}
-                        >
-                            Manage Team
-                        </button>
                     </div>
 
                     {/* Top Agents */}
@@ -460,21 +537,21 @@ export const AdminDashboard: React.FC = () => {
                             </h3>
                             <div className="space-y-3">
                                 {topAgents.map((agent, index) => (
-                                    <div key={agent.id} className="flex items-center gap-3">
-                                        <span className="text-sm font-medium text-gray-400 w-4">
+                                    <div key={agent.id} className="flex items-center gap-3 group">
+                                        <span className="text-sm font-medium text-gray-500 w-4 group-hover:text-primary transition-colors">
                                             {index + 1}
                                         </span>
                                         <img
                                             src={agent.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(agent.full_name)}&background=random`}
                                             alt=""
-                                            className="w-8 h-8 rounded-full"
+                                            className="w-8 h-8 rounded-full border border-border-strong group-hover:border-primary transition-all"
                                         />
                                         <div className="flex-1 min-w-0">
                                             <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                                                 {agent.full_name}
                                             </p>
                                             <p className="text-xs text-gray-500">
-                                                {agent.ticketCount} tickets
+                                                {agent.ticketCount} workloads handled
                                             </p>
                                         </div>
                                     </div>
@@ -482,41 +559,6 @@ export const AdminDashboard: React.FC = () => {
                             </div>
                         </div>
                     )}
-
-                    {/* Quick Actions */}
-                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
-                        <h3 className="text-sm font-bold text-gray-200 uppercase tracking-wider mb-4">Quick Actions</h3>
-                        <div className="space-y-2">
-                            <button
-                                onClick={() => navigate('/dashboard/tickets')}
-                                className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-surface-3 border border-transparent hover:border-border-strong transition-all duration-fast text-left"
-                            >
-                                <TicketIcon className="w-4 h-4 text-gray-400" />
-                                <span className="text-xs font-mono text-gray-300">View All Tickets</span>
-                            </button>
-                            <button
-                                onClick={() => navigate('/dashboard/users')}
-                                className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-surface-3 border border-transparent hover:border-border-strong transition-all duration-fast text-left"
-                            >
-                                <Users className="w-4 h-4 text-gray-400" />
-                                <span className="text-xs font-mono text-gray-300">Manage Users</span>
-                            </button>
-                            <button
-                                onClick={() => navigate('/dashboard/slas')}
-                                className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-surface-3 border border-transparent hover:border-border-strong transition-all duration-fast text-left"
-                            >
-                                <Clock className="w-4 h-4 text-gray-400" />
-                                <span className="text-xs font-mono text-gray-300">Configure SLAs</span>
-                            </button>
-                            <button
-                                onClick={() => navigate('/dashboard/branding')}
-                                className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-surface-3 border border-transparent hover:border-border-strong transition-all duration-fast text-left"
-                            >
-                                <BarChart3 className="w-4 h-4 text-gray-400" />
-                                <span className="text-xs font-mono text-gray-300">Customize Branding</span>
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
