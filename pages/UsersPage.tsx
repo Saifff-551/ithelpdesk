@@ -110,8 +110,8 @@ export const UsersPage: React.FC = () => {
 
   // Filter users by search
   const filteredUsers = users.filter(u =>
-    u.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    u.email?.toLowerCase().includes(searchQuery.toLowerCase())
+    (u.full_name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (u.email || '').toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Handle manual user creation
@@ -341,7 +341,7 @@ export const UsersPage: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center gap-3">
                       <img
-                        src={user.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.full_name)}&background=random`}
+                        src={user.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.full_name || 'User')}&background=random`}
                         alt=""
                         className="w-10 h-10 rounded-full"
                       />

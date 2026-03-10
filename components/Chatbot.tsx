@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { User, Ticket, TicketCategory, TicketPriority } from '../types';
+import { Profile, Ticket, TicketCategory, TicketPriority } from '../types';
 
 const ChatIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -13,8 +13,8 @@ interface Message {
 }
 
 interface ChatbotProps {
-    currentUser: User;
-    handleCreateTicket: (ticketData: Omit<Ticket, 'id' | 'createdAt' | 'updatedAt' | 'requester' | 'source' | 'comments' | 'status'>) => void;
+    currentUser: Profile;
+    handleCreateTicket: (ticketData: Omit<Ticket, 'id' | 'created_at' | 'updated_at' | 'creator' | 'assignee' | 'status'>) => void;
 }
 
 const Chatbot: React.FC<ChatbotProps> = ({ handleCreateTicket }) => {
@@ -42,8 +42,8 @@ const Chatbot: React.FC<ChatbotProps> = ({ handleCreateTicket }) => {
             const newTicketData = {
                 title: userMessage.substring(0, 50), // Use first 50 chars as title
                 description: userMessage,
-                priority: TicketPriority.MEDIUM,
-                category: TicketCategory.OTHER, // AI would normally classify this
+                priority: 'medium' as TicketPriority,
+                category: 'other' as TicketCategory, // AI would normally classify this
             };
             handleCreateTicket(newTicketData);
 
