@@ -660,59 +660,92 @@ export const PitchPage: React.FC = () => {
     const SlideComponent = slideComponents[currentSlide];
 
     return (
-        <div className={`${isFullscreen ? 'fixed inset-0 z-50' : 'min-h-screen'} bg-gray-100 flex flex-col`}>
+        <div className={`${isFullscreen ? 'fixed inset-0 z-50 bg-black' : 'min-h-[100dvh] bg-gray-100'} flex flex-col transition-colors duration-300`}>
             {/* Material Icons */}
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
-            {/* Toolbar */}
-            <div className="bg-white shadow-sm px-4 py-2 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                    <Link to="/" className="p-2 hover:bg-gray-100 rounded-lg">
-                        <Home className="w-5 h-5 text-gray-600" />
-                    </Link>
-                    <span className="text-sm text-gray-500">
-                        Slide {currentSlide + 1} of {slideComponents.length}: <span className="font-medium text-[#6A1B9A]">{slideNames[currentSlide]}</span>
-                    </span>
+            {/* Toolbar (Hidden in fullscreen) */}
+            {!isFullscreen && (
+                <div className="bg-white shadow-sm px-4 py-2 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <Link to="/" className="p-2 hover:bg-gray-100 rounded-lg">
+                            <Home className="w-5 h-5 text-gray-600" />
+                        </Link>
+                        <span className="text-sm text-gray-500">
+                            Slide {currentSlide + 1} of {slideComponents.length}: <span className="font-medium text-[#6A1B9A]">{slideNames[currentSlide]}</span>
+                        </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <button onClick={() => setIsPlaying(!isPlaying)} className="p-2 hover:bg-gray-100 rounded-lg" title={isPlaying ? 'Pause' : 'Auto-play'}>
+                            {isPlaying ? <Pause className="w-5 h-5 text-gray-600" /> : <Play className="w-5 h-5 text-gray-600" />}
+                        </button>
+                        <button onClick={() => setIsFullscreen(true)} className="p-2 hover:bg-gray-100 rounded-lg" title="Fullscreen (F)">
+                            <Maximize2 className="w-5 h-5 text-gray-600" />
+                        </button>
+                    </div>
                 </div>
-                <div className="flex items-center gap-2">
-                    <button onClick={() => setIsPlaying(!isPlaying)} className="p-2 hover:bg-gray-100 rounded-lg" title={isPlaying ? 'Pause' : 'Auto-play'}>
-                        {isPlaying ? <Pause className="w-5 h-5 text-gray-600" /> : <Play className="w-5 h-5 text-gray-600" />}
-                    </button>
-                    <button onClick={() => setIsFullscreen(!isFullscreen)} className="p-2 hover:bg-gray-100 rounded-lg" title="Fullscreen (F)">
-                        <Maximize2 className="w-5 h-5 text-gray-600" />
-                    </button>
-                </div>
-            </div>
+            )}
 
             {/* Slide Container */}
-            <div className="flex-1 flex items-center justify-center p-4">
-                <div className="w-full max-w-6xl aspect-video rounded-2xl shadow-2xl overflow-hidden">
+            <div className={`flex-1 flex items-center justify-center relative ${!isFullscreen ? 'p-4' : ''}`}>
+                <div className={`w-full ${isFullscreen ? 'h-full max-w-none' : 'max-w-6xl aspect-video rounded-2xl shadow-2xl overflow-hidden'} transition-all duration-300 relative`}>
                     <SlideComponent />
+                    
+                    {/* Floating controls in Fullscreen */}
+                    {isFullscreen && (
+                       <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-3 bg-black/40 hover:bg-black/60 backdrop-blur-md px-6 py-2 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-500 shadow-2xl z-50 border border-white/10 group">
+                           {/* Invisible broad capture area for hover */}
+                           <div className="absolute -inset-10 -top-20 bg-transparent z-[-1]" />
+                           
+                           <button onClick={prevSlide} className="p-2 text-white/70 hover:text-white rounded-full transition-colors" disabled={currentSlide === 0}>
+                               <ChevronLeft className="w-5 h-5" />
+                           </button>
+                           
+                           <button onClick={() => setIsPlaying(!isPlaying)} className="p-2 text-white/70 hover:text-white rounded-full transition-colors" title={isPlaying ? 'Pause' : 'Auto-play'}>
+                               {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+                           </button>
+                           
+                           <span className="text-sm font-medium text-white/90 px-2 min-w-[3rem] text-center">
+                               {currentSlide + 1} / {slideComponents.length}
+                           </span>
+
+                           <button onClick={nextSlide} className="p-2 text-white/70 hover:text-white rounded-full transition-colors" disabled={currentSlide === slideComponents.length - 1}>
+                               <ChevronRight className="w-5 h-5" />
+                           </button>
+
+                           <button onClick={() => setIsFullscreen(false)} className="p-2 text-white/70 hover:text-white rounded-full transition-colors ml-2 border-l border-white/20 pl-4" title="Exit Fullscreen (Esc)">
+                               <span className="material-icons text-xl">fullscreen_exit</span>
+                           </button>
+                       </div>
+                    )}
                 </div>
             </div>
 
-            {/* Navigation */}
-            <div className="bg-white shadow-sm px-4 py-3 flex items-center justify-center gap-4">
-                <button onClick={prevSlide} className="p-2 hover:bg-gray-100 rounded-lg" disabled={currentSlide === 0}>
-                    <ChevronLeft className={`w-6 h-6 ${currentSlide === 0 ? 'text-gray-300' : 'text-gray-600'}`} />
-                </button>
+            {/* Navigation Drawer (Hidden in fullscreen) */}
+            {!isFullscreen && (
+                <div className="bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] px-4 py-3 flex items-center justify-center gap-4 z-10">
+                    <button onClick={prevSlide} className="p-2 hover:bg-gray-100 rounded-lg" disabled={currentSlide === 0}>
+                        <ChevronLeft className={`w-6 h-6 ${currentSlide === 0 ? 'text-gray-300' : 'text-gray-600'}`} />
+                    </button>
 
-                <div className="flex gap-1">
-                    {slideComponents.map((_, i) => (
-                        <button
-                            key={i}
-                            onClick={() => setCurrentSlide(i)}
-                            className={`w-2 h-2 rounded-full transition-all ${i === currentSlide ? 'w-6 bg-[#6A1B9A]' : 'bg-gray-300 hover:bg-gray-400'
-                                }`}
-                            title={slideNames[i]}
-                        />
-                    ))}
+                    <div className="flex gap-1.5 overflow-x-auto max-w-full px-2 py-1 scrollbar-hide">
+                        {slideComponents.map((_, i) => (
+                            <button
+                                key={i}
+                                onClick={() => setCurrentSlide(i)}
+                                className={`h-2 rounded-full transition-all ${i === currentSlide ? 'w-8 bg-[#6A1B9A]' : 'w-2 bg-gray-300 hover:bg-gray-400'
+                                    }`}
+                                title={slideNames[i]}
+                                aria-label={`Go to slide ${i + 1}: ${slideNames[i]}`}
+                            />
+                        ))}
+                    </div>
+
+                    <button onClick={nextSlide} className="p-2 hover:bg-gray-100 rounded-lg" disabled={currentSlide === slideComponents.length - 1}>
+                        <ChevronRight className={`w-6 h-6 ${currentSlide === slideComponents.length - 1 ? 'text-gray-300' : 'text-gray-600'}`} />
+                    </button>
                 </div>
-
-                <button onClick={nextSlide} className="p-2 hover:bg-gray-100 rounded-lg" disabled={currentSlide === slideComponents.length - 1}>
-                    <ChevronRight className={`w-6 h-6 ${currentSlide === slideComponents.length - 1 ? 'text-gray-300' : 'text-gray-600'}`} />
-                </button>
-            </div>
+            )}
         </div>
     );
 };
