@@ -27,7 +27,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Get tenant context (resolved from URL)
   const { tenant: resolvedTenant, loading: tenantLoading } = useTenant();
 
-  const fetchProfileAndTenant = async (userId: string) => {
+  const fetchProfileAndTenant = async (userId: string, retryCount = 0) => {
     try {
       setError(null);
 
@@ -82,16 +82,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         }
       } else {
-        // No profile found - user may have auth but no Firestore profile
+        // No profile found - user may have auth but no Firestore profile.
+        // If we just registered, the profile creation might still be in flight.
+        if (retryCount < 3) {
+           setTimeout(() => fetchProfileAndTenant(userId, retryCount + 1), 1000);
+           return;
+        }
         setError('User profile not found. Please complete registration.');
         setProfile(null);
         setTenant(null);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error fetching profile:', err);
+      // Firebase permission errors often happen during the split-second between Auth creation and Firestore document creation during registration.
+      if (err?.code === 'permission-denied' && retryCount < 3) {
+         setTimeout(() => fetchProfileAndTenant(userId, retryCount + 1), 1000);
+         return;
+      }
       setError('Failed to load user profile');
     } finally {
-      setLoading(false);
+      if (retryCount === 0 || retryCount >= 3) {
+        setLoading(false);
+      }
     }
   };
 
